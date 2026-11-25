@@ -2,26 +2,1268 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Cổng đăng ký thi tốt nghiệp và sát hạch · Minh Khang</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đăng ký thi - Trung tâm Minh Khang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: #f2f6f7; color: #193944; font: 16px/1.6 "Be Vietnam Pro", "Segoe UI", Arial, sans-serif; overflow: hidden; }
-    iframe { display: block; width: 100%; height: 100vh; height: 100dvh; border: 0; outline: none; }
-    details { position: fixed; right: 12px; bottom: 12px; z-index: 10; box-sizing: border-box; max-width: min(360px, calc(100vw - 24px)); padding: 8px 12px; border: 1px solid #b9cdd3; border-radius: 10px; background: #fff; box-shadow: 0 3px 12px rgba(25,57,68,.12); }
-    summary { cursor: pointer; color: #007d79; font-weight: 500; font-size: 13px; }
-    p { margin: 8px 0 2px; font-size: 13px; }
-    a { color: #007d79; font-weight: 600; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    a:focus-visible, summary:focus-visible { outline: 3px solid #51bdb8; outline-offset: 3px; }
+    :root{
+      --canvas:#f7f6f3;
+      --surface:#ffffff;
+      --surface-alt:#f1efea;
+      --surface-tint:#eef6f4;
+      --ink:#18181b;
+      --muted:#52525b;
+      --subtle:#71717a;
+      --line:rgba(24,24,27,.10);
+      --line-strong:rgba(24,24,27,.20);
+      --accent:#0b6e5c;
+      --accent-hover:#085749;
+      --accent-ink:#ffffff;
+      --ok-ink:#15803d;
+      --ok-bg:#f0fdf4;
+      --ok-line:#bbf7d0;
+      --warn-ink:#92400e;
+      --warn-bg:#fffbeb;
+      --warn-line:#fde68a;
+      --err-ink:#b91c1c;
+      --err-bg:#fef2f2;
+      --err-line:#fecaca;
+      --shadow:0 1px 2px rgba(24,24,27,.05);
+      --shadow-float:0 8px 24px rgba(24,24,27,.08);
+      --r-card:12px;
+      --r-control:8px;
+      --r-tag:6px;
+      --ease:cubic-bezier(.22,1,.36,1);
+      --font-sans:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-family:var(--font-sans);
+      color:var(--ink);
+      font-size:15px;
+      line-height:1.5;
+      background:var(--canvas);
+      color-scheme:light;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased}
+    button,input,select,textarea{font:inherit;color:inherit}
+    button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+    button,a{touch-action:manipulation}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.55}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+      outline:2px solid var(--accent);
+      outline-offset:2px;
+    }
+    a{color:var(--accent);text-underline-offset:3px}
+    h1,h2,h3,h4,p{margin:0}
+    h1{font-size:28px;line-height:1.2;letter-spacing:-.02em;color:var(--ink);font-weight:500}
+    h2{font-size:20px;line-height:1.3;letter-spacing:-.01em;font-weight:500}
+    h3{font-size:16px;line-height:1.35;font-weight:500}
+    small,.small{font-size:13px;line-height:1.45}
+    .muted{color:var(--muted)}
+    .subtle{color:var(--subtle)}
+    .hidden,[hidden]{display:none!important}
+    .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+    .num{font-variant-numeric:tabular-nums}
+
+    /* Header */
+    .topbar{
+      position:sticky;top:0;z-index:20;
+      background:var(--surface);
+      border-bottom:1px solid var(--line);
+    }
+    .top-inner{
+      max-width:1120px;min-height:64px;margin:0 auto;padding:12px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brandmark{
+      height:36px;width:36px;border-radius:var(--r-control);
+      background:var(--surface-alt);color:var(--accent);
+      display:grid;place-items:center;flex:none;overflow:hidden;
+      border:1px solid var(--line);
+    }
+    .brand-name{font-weight:500;font-size:16px;line-height:1.2;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;gap:4px;align-items:center;flex:none}
+    .nav button{
+      border:1px solid transparent;background:transparent;
+      height:36px;padding:0 16px;border-radius:var(--r-control);
+      color:var(--muted);font-weight:500;font-size:14px;white-space:nowrap;
+      transition:background-color 150ms var(--ease),color 150ms var(--ease);
+    }
+    .nav button:hover{background:var(--surface-alt);color:var(--ink)}
+    .nav button.active{background:var(--surface-alt);color:var(--ink);border-color:var(--line)}
+
+    .demo-banner{
+      background:var(--surface-alt);border-bottom:1px solid var(--line);
+      padding:8px 24px;text-align:center;font-size:13px;color:var(--muted);
+    }
+    .demo-banner strong{color:var(--ink);font-weight:500;margin-right:8px}
+
+    /* Shells */
+    .shell{max-width:960px;margin:0 auto;padding:32px 24px 48px}
+    .staff-shell{max-width:1120px;margin:0 auto;padding:32px 24px 48px}
+
+    /* Cards & Surfaces */
+    .card{
+      background:var(--surface);border:1px solid var(--line);
+      border-radius:var(--r-card);box-shadow:var(--shadow);
+    }
+    .card-head{padding:24px 24px 0}
+    .card-body{padding:24px}
+    .head-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .section-space{margin-top:24px}
+
+    /* Lookup */
+    .lookup-form{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;align-items:end;margin-top:20px;
+    }
+    .input-wrap{position:relative;display:flex;align-items:center}
+    .input-wrap input{padding-right:64px;font-size:16px;font-weight:500;letter-spacing:.02em;min-height:48px}
+    .clear-input{
+      position:absolute;right:8px;
+      border:0;background:var(--surface-alt);color:var(--muted);
+      border-radius:var(--r-tag);padding:4px 10px;font-size:13px;font-weight:500;
+      transition:color 150ms var(--ease),background-color 150ms var(--ease);
+    }
+    .clear-input:hover{color:var(--ink)}
+    .lookup-submit{min-height:48px;padding:0 20px;font-size:15px}
+    .demo-hint{margin-top:12px;font-size:13px;color:var(--subtle)}
+
+    /* Form Controls */
+    .field{display:flex;flex-direction:column;gap:8px;min-width:0}
+    label,.field-label{font-size:14px;font-weight:500;color:var(--ink)}
+    input,select,textarea{
+      width:100%;min-height:44px;
+      border:1px solid var(--line-strong);border-radius:var(--r-control);
+      background:var(--surface);color:var(--ink);
+      padding:8px 12px;min-width:0;
+      transition:border-color 150ms var(--ease);
+    }
+    input::placeholder,textarea::placeholder{color:var(--subtle)}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+    select:disabled,input:disabled,textarea:disabled{background:var(--surface-alt);color:var(--muted);cursor:not-allowed}
+    input[type=checkbox]{width:18px;min-height:18px;height:18px;accent-color:var(--accent);flex:none;cursor:pointer}
+    textarea{min-height:68px;resize:vertical}
+    .field-help{font-size:13px;color:var(--subtle);line-height:1.4}
+
+    /* Buttons */
+    .btn{
+      border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);
+      min-height:44px;padding:0 16px;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border-radius:var(--r-control);font-weight:500;font-size:14px;
+      text-decoration:none;line-height:1;white-space:nowrap;
+      transition:background-color 150ms var(--ease),border-color 150ms var(--ease),transform 120ms var(--ease);
+    }
+    .btn:hover{background:var(--surface-alt)}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+    .btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+    .btn-danger{color:var(--err-ink);border-color:var(--err-line);background:var(--err-bg)}
+    .btn-danger:hover{background:#fee2e2}
+    .btn-sm{min-height:36px;padding:0 12px;font-size:13px}
+    .btn-wide{width:100%;min-height:44px;font-size:15px}
+
+    /* Notices & Tags */
+    .notice{
+      padding:12px 16px;border-radius:var(--r-control);
+      background:var(--surface-alt);font-size:14px;
+      border:1px solid var(--line);margin-top:16px;white-space:pre-line;
+      color:var(--ink);
+    }
+    .notice.error{color:var(--err-ink);background:var(--err-bg);border-color:var(--err-line)}
+    .notice.success{color:var(--ok-ink);background:var(--ok-bg);border-color:var(--ok-line)}
+    .notice.warning{color:var(--warn-ink);background:var(--warn-bg);border-color:var(--warn-line)}
+    .notice:empty{display:none}
+    .full{grid-column:1/-1}
+
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border-radius:var(--r-tag);padding:4px 10px;
+      font-size:13px;font-weight:500;line-height:1.3;
+      background:var(--surface-alt);color:var(--muted);
+      border:1px solid var(--line);white-space:nowrap;
+    }
+    .tag-green{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-line)}
+    .tag-red{background:var(--err-bg);color:var(--err-ink);border-color:var(--err-line)}
+    .tag-amber{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+    .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+    /* Public Schedule List */
+    .schedule-board{margin-top:24px;overflow:hidden}
+    .schedule-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .schedule-col{padding:24px}
+    .schedule-col+.schedule-col{border-left:1px solid var(--line)}
+    .schedule-col-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:4px;
+    }
+    .schedule-row{
+      display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+      padding:12px 0;
+    }
+    .schedule-row+.schedule-row{border-top:1px solid var(--line)}
+    .schedule-date{font-size:15px;font-weight:500;color:var(--ink)}
+    .schedule-label{font-size:14px;color:var(--ink);margin-top:2px}
+    .schedule-loc{font-size:13px;color:var(--subtle);margin-top:2px}
+    .schedule-cutoff{font-size:12px;color:var(--subtle);white-space:nowrap;flex:none}
+
+    /* Student Profile & Exam Cards */
+    .profile-card{scroll-margin-top:84px}
+    .details{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;margin-top:20px;
+    }
+    .detail{
+      background:var(--surface-alt);border:1px solid var(--line);
+      border-radius:var(--r-control);padding:12px 16px;
+    }
+    .detail dt{font-size:12px;color:var(--subtle);margin-bottom:4px}
+    .detail dd{margin:0;font-weight:500;font-size:15px;word-break:break-word}
+    .status-strip{
+      display:flex;gap:24px;flex-wrap:wrap;
+      margin-top:16px;padding-top:16px;border-top:1px solid var(--line);
+      font-size:14px;
+    }
+    .status-item{display:inline-flex;align-items:center;gap:8px}
+    .status-item .label{color:var(--muted)}
+    .status-item .val{font-weight:500;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+    .status-item .val.ok{color:var(--ok-ink)}
+
+    .inline-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+    .exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch;margin-top:24px}
+    .exam-card{display:flex;flex-direction:column}
+    .exam-card-head{
+      padding:16px 24px;border-bottom:1px solid var(--line);
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+    }
+    .exam-card-body{padding:24px;flex:1;display:flex;flex-direction:column}
+    .exam-date{font-size:18px;font-weight:500;color:var(--ink);margin-top:8px}
+    .exam-location{font-size:13px;color:var(--muted);margin-top:4px}
+
+    /* Phân biệt màu hài hòa giữa Tốt nghiệp & Sát hạch */
+    .exam-card-TN{
+      border-color:rgba(37,99,235,.22);
+      border-top:3px solid #2563eb;
+    }
+    .exam-card-TN .exam-card-head{
+      background:#f0f6ff;
+      border-bottom-color:rgba(37,99,235,.12);
+    }
+    .exam-card-TN .exam-card-head h3{color:#1d4ed8;font-weight:600}
+    .exam-card-TN .btn-primary{background:#2563eb;border-color:#2563eb}
+    .exam-card-TN .btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+    .schedule-col-TN{background:#fafcff}
+    .schedule-col-TN .schedule-col-head{border-bottom-color:#dbeafe}
+    .schedule-col-TN .schedule-col-head h3{color:#1d4ed8;font-weight:600}
+    .schedule-col-TN .schedule-date{color:#1e40af}
+
+    .exam-card-SH{
+      border-color:rgba(11,110,92,.22);
+      border-top:3px solid #0b6e5c;
+    }
+    .exam-card-SH .exam-card-head{
+      background:#f0fdf9;
+      border-bottom-color:rgba(11,110,92,.12);
+    }
+    .exam-card-SH .exam-card-head h3{color:#0b6e5c;font-weight:600}
+    .exam-card-SH .btn-primary{background:#0b6e5c;border-color:#0b6e5c}
+    .exam-card-SH .btn-primary:hover{background:#085749;border-color:#085749}
+    .schedule-col-SH{background:#fbfdfc}
+    .schedule-col-SH .schedule-col-head{border-bottom-color:#ccfbf1}
+    .schedule-col-SH .schedule-col-head h3{color:#0b6e5c;font-weight:600}
+    .schedule-col-SH .schedule-date{color:#047857}
+
+    .status-item-TN .label{color:#1d4ed8;font-weight:500}
+    .status-item-SH .label{color:#0b6e5c;font-weight:500}
+
+    .wait-box{
+      display:flex;gap:12px;align-items:center;
+      padding:12px 14px;border-radius:var(--r-control);
+      border:1px solid var(--line-strong);background:var(--surface);
+      cursor:pointer;font-size:14px;font-weight:500;color:var(--ink);
+      transition:border-color 150ms var(--ease),background-color 150ms var(--ease);
+    }
+    .wait-box.selected{border-color:var(--accent);background:var(--surface-tint)}
+
+    .receipt{
+      padding:16px;background:var(--ok-bg);
+      border:1px solid var(--ok-line);border-radius:var(--r-control);
+    }
+    .receipt.waiting{background:var(--warn-bg);border-color:var(--warn-line)}
+    .receipt-meta{margin-top:12px;display:grid;gap:4px;font-size:14px}
+
+    .registration-form{display:grid;gap:16px;flex:1;align-content:start}
+    .registration-form .submit-row{margin-top:auto;padding-top:4px}
+    .exam-detail-box{
+      padding:12px;border-radius:var(--r-control);
+      background:var(--surface-alt);border:1px solid var(--line);
+      font-size:13px;color:var(--ink);display:grid;gap:4px;
+    }
+
+    /* Staff & Admin */
+    .login-wrap{max-width:420px;margin:40px auto}
+    .login-form{display:grid;gap:16px;margin-top:20px}
+    .staff-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+    .staff-actions{display:flex;align-items:center;gap:12px}
+    .tabs{display:flex;border-bottom:1px solid var(--line);gap:24px;overflow-x:auto;margin-bottom:24px}
+    .tabs button{
+      background:none;border:0;border-bottom:2px solid transparent;
+      padding:12px 0;color:var(--muted);font-weight:500;white-space:nowrap;font-size:14px;
+      transition:color 150ms var(--ease),border-color 150ms var(--ease);
+    }
+    .tabs button:hover{color:var(--ink)}
+    .tabs button.active{border-color:var(--accent);color:var(--ink)}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:24px}
+    .stat-card{padding:20px 24px}
+    .stat-card p{font-size:13px;color:var(--muted)}
+    .stat-card strong{display:block;font-size:28px;line-height:1.1;font-weight:500;color:var(--ink);margin-top:8px}
+    .sync-bar{
+      display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;
+      padding:12px 16px;margin-bottom:20px;border-radius:var(--r-control);
+      background:var(--surface);border:1px solid var(--line);font-size:13px;color:var(--muted);
+    }
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .check-row{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px;min-height:32px;cursor:pointer}
+    .toolbar{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .toolbar .field{min-width:180px;flex:1}
+    .toolbar .search-query{flex:1.6}
+    .table-scroll{width:100%;overflow:auto}
+    table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}
+    th{
+      font-size:12px;font-weight:500;color:var(--muted);
+      background:var(--surface-alt);white-space:nowrap;
+      padding:12px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    }
+    td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+    tr:last-child td{border-bottom:0}
+    .table-actions{display:flex;gap:8px;flex-wrap:nowrap}
+    .empty{text-align:center;padding:36px 20px;color:var(--muted)}
+    .empty h3{color:var(--ink);margin:8px 0 4px}
+    .table-card .card-head{padding:20px 24px}
+    .pager{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 24px;border-top:1px solid var(--line);gap:12px;font-size:13px;color:var(--muted);flex-wrap:wrap;
+    }
+    .card-subsection{border-top:1px solid var(--line);margin-top:24px;padding-top:24px}
+    .card-subsection h3{margin-bottom:16px}
+    .config-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .help-box{
+      padding:12px 16px;border:1px solid var(--ok-line);background:var(--ok-bg);
+      border-radius:var(--r-control);color:var(--ok-ink);font-size:13px;margin:16px 0;
+    }
+    .inline-student{
+      border:1px solid var(--line);background:var(--surface-alt);
+      border-radius:var(--r-control);padding:20px;margin-top:16px;
+    }
+    .inline-matches{
+      border:1px solid var(--line);background:var(--surface-alt);
+      border-radius:var(--r-control);padding:12px 16px;margin-top:12px;
+    }
+    .match-list{display:grid;gap:8px;margin-top:8px}
+    .match-item{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      padding:10px 12px;border-radius:var(--r-control);background:var(--surface);border:1px solid var(--line);
+      text-align:left;width:100%;
+    }
+    .match-item:hover{border-color:var(--accent);background:var(--surface-tint)}
+    .inline-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+    .inline-field{min-width:0;display:flex;flex-direction:column;gap:4px}
+    .inline-field>span{font-size:12px;color:var(--subtle)}
+    .inline-field strong{font-size:14px;font-weight:500;overflow-wrap:anywhere}
+    .inline-field .btn{align-self:start;margin-top:4px}
+    .progress-meter{height:4px;background:var(--surface-alt);border-radius:4px;margin:8px 0 4px;overflow:hidden}
+    .progress-meter span{display:block;height:100%;background:var(--accent);border-radius:4px}
+
+    /* Modal & Toast */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(24,24,27,.45);
+      z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;
+    }
+    .modal{
+      width:100%;max-width:520px;max-height:90dvh;overflow:auto;
+      border-radius:var(--r-card);background:var(--surface);border:1px solid var(--line);
+      box-shadow:var(--shadow-float);
+    }
+    .modal-head{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:12px}
+    .modal-body{padding:24px}
+    .modal-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+    .close-btn{
+      border:1px solid var(--line);background:var(--surface);color:var(--muted);
+      border-radius:var(--r-control);height:36px;width:36px;display:grid;place-items:center;
+      transition:background-color 150ms var(--ease),color 150ms var(--ease);
+    }
+    .close-btn:hover{background:var(--surface-alt);color:var(--ink)}
+    .toast{
+      position:fixed;top:76px;right:24px;left:auto;
+      max-width:min(400px,92vw);padding:12px 16px;
+      background:var(--ink);color:var(--surface);z-index:50;
+      border-radius:var(--r-control);box-shadow:var(--shadow-float);font-size:14px;font-weight:500;
+      pointer-events:none;
+    }
+    .loading-dot{
+      display:inline-block;height:16px;width:16px;
+      border:2px solid currentColor;border-right-color:transparent;
+      border-radius:50%;animation:spin .7s linear infinite;flex:none;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .app-loading{padding:64px 24px;text-align:center;color:var(--muted)}
+    .app-loading .loading-dot{width:24px;height:24px;color:var(--accent);margin-bottom:12px}
+    .skeleton-block{border-radius:var(--r-control);background:var(--surface-alt)}
+    .skeleton-card{padding:24px;display:grid;gap:12px}
+    .boot-error{max-width:560px;margin:48px auto;padding:24px}
+    .footer{
+      max-width:960px;margin:0 auto;padding:16px 24px 32px;
+      border-top:1px solid var(--line);display:flex;justify-content:space-between;
+      gap:12px;font-size:13px;color:var(--subtle);flex-wrap:wrap;
+    }
+    .print-only{display:none}
+
+    @media(prefers-reduced-motion:reduce){
+      *{transition:none!important;animation:none!important}
+    }
+
+    @media(max-width:860px){
+      .schedule-cols,.exam-grid{grid-template-columns:1fr}
+      .schedule-col+.schedule-col{border-left:0;border-top:1px solid var(--line)}
+      .config-map{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .table-actions{flex-wrap:wrap}
+    }
+    @media(max-width:680px){
+      .top-inner{padding:12px 16px;min-height:60px;flex-wrap:wrap;gap:8px}
+      .brandmark{width:32px;height:32px}
+      .brand-name{font-size:15px;white-space:normal}
+      .nav{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:8px;border-top:1px solid var(--line)}
+      .nav button{padding:0 12px;font-size:13px;text-align:center}
+      .toast{top:auto;bottom:16px;left:50%;right:auto;transform:translateX(-50%)}
+      .shell,.staff-shell{padding:20px 16px 36px}
+      .card-head{padding:20px 20px 0}
+      .card-body,.schedule-col,.exam-card-body{padding:20px}
+      .exam-card-head{padding:16px 20px}
+      .lookup-form{grid-template-columns:1fr}
+      .lookup-submit{width:100%}
+      .details,.inline-fields,.form-grid,.config-map,.stat-grid{grid-template-columns:1fr}
+      .toolbar .field{min-width:100%}
+      .toolbar .btn{width:100%}
+      .modal-backdrop{padding:12px}
+      .modal-head,.modal-body,.modal-footer{padding:16px 20px}
+      .footer{padding:16px 16px 24px}
+    }
+    @media print{
+      body{background:#fff;color:#000}
+      .topbar,.demo-banner,.lookup-card,.footer,.no-print,.registration-form,.nav,.toast{display:none!important}
+      .shell{padding:12px;max-width:none}
+      .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+      .exam-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+      .details{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .print-only{display:block;margin-top:16px}
+    }
   </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbxO_zmpoWKIGicf5g7SR1vsCfVaWUxXi3LCRALlhVzbPzBAfsIzp66ssDdx3irECeQS/exec" title="Cổng đăng ký thi tốt nghiệp và sát hạch · Minh Khang" allow="geolocation; microphone; camera; clipboard-read; clipboard-write" allowfullscreen></iframe>
-  <details>
-    <summary>Không tải được trang?</summary>
-    <p>Kiểm tra kết nối rồi <a href="./" target="_self">tải lại trang</a>.</p>
-  </details>
+  <div id="demo-banner" class="demo-banner" hidden><strong>Chế độ xem thử</strong> Dữ liệu minh họa trên máy, không ghi vào máy chủ</div>
+  <header class="topbar">
+    <div class="top-inner">
+      <div class="brand">
+        <div class="brandmark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3.5 17V7l4.5 6 4.5-6v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 7v10M20.5 7l-5 5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div id="brand-name" class="brand-name">Trung tâm Minh Khang</div>
+      </div>
+      <nav class="nav" aria-label="Điều hướng chính">
+        <button data-nav="student" class="active">Đăng ký thi</button>
+        <button data-nav="admin">Quản trị</button>
+      </nav>
+    </div>
+  </header>
+  <main id="app"><div class="app-loading" role="status"><span class="loading-dot"></span><p>Đang tải...</p></div></main>
+  <footer class="footer">
+    <span id="footer-name">Trung tâm Minh Khang</span>
+    <span>Cổng tra cứu và đăng ký thi</span>
+  </footer>
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <template id="boot-data"></template>
+
+  <script>window.WEBDANGKY_API_BASE="https://minhkhang-dangky.thi-minhkhang.workers.dev";</script>
+  <script>
+  'use strict';
+  const API_BASE=(window.WEBDANGKY_API_BASE||'').replace(/\/$/,'');
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icons={
+    search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/>',
+    shield:'<path d="m12 3 8 3v6c0 4-5 7-8 9-3-2-8-5-8-9V6z"/><path d="m8 12 3 3 5-6"/>',
+    calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-11 4h2m3 0h1m-6 3h2"/>',
+    cap:'<path d="m3 9 9-5 9 5-9 5zM7 11v6c3 3 7 3 10 0v-6m4-2v7"/>',
+    car:'<path d="m5 11 2-6h10l2 6M3 11h18v8H3zM6 19v2m12-2v2M6 15h1m10 0h1"/>',
+    check:'<path d="m5 12 4 4L19 6"/>',
+    refresh:'<path d="M20 8V3l-3 3a8 8 0 1 0 2 10M20 3h-5"/>',
+    print:'<path d="M7 8V3h10v5M7 17H4V9h16v8h-3M7 14h10v7H7z"/>',
+    close:'<path d="m6 6 12 12M18 6 6 18"/>',
+    logout:'<path d="M10 4H4v16h6m4-12 4 4-4 4m-6-4h10"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    download:'<path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/>',
+    edit:'<path d="m15 4 5 5L9 20H4v-5zM13 6l5 5"/>',
+    info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/>'
+  };
+  const icon=(name,size=16)=>'<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(icons[name]||icons.info)+'</svg>';
+  const typeName=t=>t==='TN'?'Thi tốt nghiệp':'Thi sát hạch';
+  const fmtDate=v=>{if(!v)return 'Chưa chọn';const s=String(v).slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s.split('-').reverse().join('/');return s};
+  function inputDate(value){const s=String(value||'').trim();if(!s)return '';let iso='';if(/^\d{4}-\d{2}-\d{2}$/.test(s))iso=s;else{const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(!m)throw new Error('Nhập ngày theo định dạng dd/mm/yyyy.');iso=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0')}const d=new Date(iso+'T12:00:00Z');if(isNaN(d)||d.toISOString().slice(0,10)!==iso)throw new Error('Ngày không hợp lệ.');return iso}
+  function inputTime(value){const s=String(value||'').trim();if(!s)return '';const isoMatch=s.match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})(?::\d{2})?$/);if(isoMatch){if(Number(isoMatch[2])>23||Number(isoMatch[3])>59)throw new Error('Giờ đóng đăng ký không hợp lệ.');return inputDate(isoMatch[1])+'T'+isoMatch[2]+':'+isoMatch[3]}const m=s.match(/^(\d{1,2}\/\d{1,2}\/\d{4}) (\d{2}):(\d{2})$/);if(!m||Number(m[2])>23||Number(m[3])>59)throw new Error('Nhập hạn đăng ký theo dd/mm/yyyy HH:mm.');return inputDate(m[1])+'T'+m[2]+':'+m[3]}
+  const fmtTime=v=>v?fmtDate(v)+' '+String(v).slice(11,16):'Không đặt hạn';
+  const cleanDash=v=>String(v==null?'':v).replace(/[—–]/g,'-');
+
+  const state={
+    page:'student',boot:null,view:null,cccdInput:'',
+    auth:null,admin:null,tab:'schedules',staffStudent:null,staffMatches:[],
+    list:{type:'TN',examId:'',query:'',page:1,result:null},
+    listCache:Object.create(null)
+  };
+  const listCacheKey=(l=state.list)=>[l.type,l.examId,l.query,l.page].join('|');
+  function studentSkeleton(){
+    return '<section class="card profile-card section-space skeleton-card" aria-busy="true" aria-label="Đang tải hồ sơ học viên">'
+      +'<div class="skeleton-block" style="height:24px;width:40%"></div>'
+      +'<div class="details"><div class="skeleton-block" style="height:60px"></div><div class="skeleton-block" style="height:60px"></div><div class="skeleton-block" style="height:60px"></div></div>'
+      +'</section>'
+      +'<div class="exam-grid">'
+      +'<section class="card skeleton-card"><div class="skeleton-block" style="height:24px;width:50%"></div><div class="skeleton-block" style="height:44px"></div><div class="skeleton-block" style="height:44px"></div></section>'
+      +'<section class="card skeleton-card"><div class="skeleton-block" style="height:24px;width:50%"></div><div class="skeleton-block" style="height:44px"></div><div class="skeleton-block" style="height:44px"></div></section>'
+      +'</div>';
+  }
+  function tableSkeleton(){
+    return '<div class="skeleton-card" aria-busy="true" aria-label="Đang tải danh sách đăng ký">'
+      +'<div class="skeleton-block" style="height:36px"></div>'
+      +'<div class="skeleton-block" style="height:40px"></div>'
+      +'<div class="skeleton-block" style="height:40px"></div>'
+      +'<div class="skeleton-block" style="height:40px"></div>'
+      +'</div>';
+  }
+  function syncStudentView(){
+    const sr=$('student-result');if(sr)sr.innerHTML=state.view?studentResult(state.view):publicSchedules();
+  }
+  const demo=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)&&new URLSearchParams(location.search).get('demo')==='1';
+  let toastTimer;
+  function toast(message){$('toast').textContent=cleanDash(message);$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4800)}
+  function notice(id,msg,type='error'){const n=$(id);if(n){n.textContent=cleanDash(msg);n.className='notice '+type}}
+  function setBusy(button,busy,label){
+    if(!button)return;
+    if(busy){
+      if(!button.dataset.old)button.dataset.old=button.innerHTML;
+      button.disabled=true;
+      button.innerHTML='<span class="loading-dot"></span>'+esc(label||'Đang xử lý');
+    }else{
+      button.disabled=false;
+      if(button.dataset.old){button.innerHTML=button.dataset.old;delete button.dataset.old;}
+    }
+  }
+
+  async function api(action,payload={},options={}){
+    if(demo)return mockApi(action,payload);
+    const maxRetries=options.retries!=null?options.retries:(action==='lookup'||action==='bootstrap'||action==='register'?2:0);
+    const timeoutMs=options.timeoutMs||15000;
+    let lastError;
+    for(let attempt=0;attempt<=maxRetries;attempt++){
+      const controller=new AbortController();
+      const onExternalAbort=()=>controller.abort();
+      if(options.signal){
+        if(options.signal.aborted)throw Object.assign(new Error('Đã hủy'),{name:'AbortError'});
+        options.signal.addEventListener('abort',onExternalAbort,{once:true});
+      }
+      const timer=setTimeout(()=>controller.abort(),timeoutMs);
+      try{
+        const isBoot=action==='bootstrap';
+        const res=await fetch(API_BASE+'/api/'+encodeURIComponent(action),{
+          method:isBoot?'GET':'POST',
+          // Use text/plain for POST so cross-origin GitHub Pages calls trigger zero CORS preflight requests
+          headers:isBoot?undefined:{'Content-Type':'text/plain;charset=UTF-8'},
+          body:isBoot?undefined:JSON.stringify(payload||{}),
+          signal:controller.signal,
+          cache:'no-store'
+        });
+        clearTimeout(timer);
+        if(options.signal)options.signal.removeEventListener('abort',onExternalAbort);
+        const text=await res.text();
+        let result=null;
+        try{result=JSON.parse(text)}catch{}
+        if(!result){
+          if((res.status>=500||res.status===429)&&attempt<maxRetries){
+            await new Promise(r=>setTimeout(r,250*(attempt+1)+Math.floor(Math.random()*200)));
+            continue;
+          }
+          throw new Error('Không kết nối được máy chủ. Vui lòng thử lại.');
+        }
+        if(!result.ok){
+          const code=result.error&&result.error.code;
+          if(code==='BUSY'&&attempt<maxRetries){
+            await new Promise(r=>setTimeout(r,250*(attempt+1)+Math.floor(Math.random()*200)));
+            continue;
+          }
+          const e=new Error((result.error&&result.error.message)||'Không thực hiện được yêu cầu. Vui lòng thử lại.');
+          e.code=code;
+          throw e;
+        }
+        return result.data;
+      }catch(err){
+        clearTimeout(timer);
+        if(options.signal)options.signal.removeEventListener('abort',onExternalAbort);
+        if(err&&err.name==='AbortError'&&options.signal&&options.signal.aborted)throw err;
+        lastError=err;
+        if((!err||!err.code)&&attempt<maxRetries){
+          await new Promise(r=>setTimeout(r,250*(attempt+1)+Math.floor(Math.random()*200)));
+          continue;
+        }
+        if(err&&err.code)throw err;
+        throw new Error('Không kết nối được máy chủ. Vui lòng thử lại.');
+      }
+    }
+    throw lastError||new Error('Không kết nối được máy chủ. Vui lòng thử lại.');
+  }
+
+  const tokenPayload=more=>Object.assign({token:state.auth&&state.auth.token},more||{});
+  function authIs(role){return state.auth&&(state.auth.role==='admin'||state.auth.role===role)}
+  function renderNav(){
+    document.querySelectorAll('[data-nav]').forEach(b=>{
+      b.classList.toggle('active',b.dataset.nav===state.page);
+      b.setAttribute('aria-current',b.dataset.nav===state.page?'page':'false');
+    });
+  }
+  const defaultBrand=document.querySelector('.brandmark').innerHTML;
+  function applyBrand(){
+    const name=state.boot&&state.boot.centerName||'Trung tâm Minh Khang';
+    $('brand-name').textContent=cleanDash(name);
+    $('footer-name').textContent=cleanDash(name);
+    const logo=state.boot&&state.boot.logoUrl;
+    document.querySelector('.brandmark').innerHTML=logo?'<img src="'+esc(logo)+'" alt="" style="width:100%;height:100%;object-fit:contain;background:#fff;border-radius:inherit">':defaultBrand;
+  }
+  function render(){renderNav();if(state.page==='student')renderStudent();else renderStaff()}
+  function examChoice(e){return fmtDate(e.date)+' - '+cleanDash(e.label||typeName(e.type))+(e.location?' ('+cleanDash(e.location)+')':'')}
+
+  function publicSchedules(){
+    const cols=['TN','SH'].map(type=>{
+      const exams=(state.boot.exams||[]).filter(e=>e.type===type&&e.available);
+      return '<div class="schedule-col schedule-col-'+type+'">'
+        +'<div class="schedule-col-head"><h3>'+typeName(type)+'</h3><span class="small subtle num">'+(exams.length?exams.length+' đợt mở':'Chưa mở')+'</span></div>'
+        +(exams.length?exams.map(e=>'<div class="schedule-row"><div><div class="schedule-date mono">'+esc(fmtDate(e.date))+'</div><div class="schedule-label">'+esc(cleanDash(e.label))+'</div>'+(e.location?'<div class="schedule-loc">'+esc(cleanDash(e.location))+'</div>':'')+'</div><span class="schedule-cutoff mono">'+(e.cutoff?'Hạn '+esc(fmtTime(e.cutoff)):'Mở')+'</span></div>').join(''):'<p class="small subtle" style="padding:16px 0">Chưa có lịch mở</p>')
+        +'</div>';
+    }).join('');
+    return '<section class="card schedule-board"><div class="schedule-cols">'+cols+'</div></section>';
+  }
+
+  function renderStudent(){
+    const noticeText=cleanDash((state.boot.notice||'').trim());
+    const showNotice=noticeText&&noticeText!=='Vui lòng kiểm tra thông tin trước khi đăng ký. Không hỗ trợ tự đổi ngày thi sau khi đăng ký.';
+    $('app').innerHTML='<div class="shell">'
+      +'<section id="lookup-card" class="card lookup-card">'
+      +'<div class="card-head"><h1>Tra cứu lịch thi</h1></div>'
+      +'<form id="lookup-form" class="card-body" style="padding-top:0">'
+      +'<div class="lookup-form">'
+      +'<div class="field"><label for="cccd">Số CCCD / CMND</label>'
+      +'<div class="input-wrap"><input id="cccd" name="cccd" autocomplete="off" inputmode="text" maxlength="30" value="'+esc(state.cccdInput)+'" placeholder="Nhập 12 số CCCD" required>'
+      +'<button type="button" class="clear-input" data-action="clear-cccd" '+(state.cccdInput?'':'hidden')+'>Xóa</button></div></div>'
+      +'<button class="btn btn-primary lookup-submit" type="submit">'+icon('search',16)+'Tra cứu</button>'
+      +'</div>'
+      +(demo?'<p class="demo-hint mono">CCCD mẫu: 000000000001, 000000000002, 000000000003</p>':'')
+      +'<div id="lookup-message" class="notice" role="alert"></div>'
+      +(showNotice?'<div class="notice warning">'+esc(noticeText)+'</div>':'')
+      +'</form></section>'
+      +'<div id="student-result">'+(state.view?studentResult(state.view):publicSchedules())+'</div>'
+      +'</div>';
+  }
+
+  function studentResult(v){
+    const s=v.student;
+    const shText=s.passed?'Đã đạt':cleanDash((s.statuses&&s.statuses[1]&&s.statuses[1].value)||'Chưa đạt');
+    return '<section class="card profile-card section-space" id="student-profile"><div class="card-body">'
+      +'<div class="head-line"><div><h2>'+esc(s.name)+'</h2><div class="small subtle mono" style="margin-top:4px">CCCD '+esc(s.maskedCccd)+'</div></div>'
+      +'<div class="inline-actions no-print"><button class="btn btn-sm" type="button" data-action="reset-lookup">Tra cứu khác</button><button class="btn btn-sm" type="button" data-action="refresh-student">'+icon('refresh',16)+'Làm mới</button><button class="btn btn-sm" type="button" data-action="print">'+icon('print',16)+'In phiếu</button></div></div>'
+      +'<dl class="details">'
+      +'<div class="detail"><dt>Ngày sinh</dt><dd class="mono">'+esc(fmtDate(s.dob))+'</dd></div>'
+      +'<div class="detail"><dt>Khóa học</dt><dd>'+esc(s.className||'Chưa cập nhật')+'</dd></div>'
+      +'<div class="detail"><dt>Hạng</dt><dd>'+esc(s.license||'Chưa cập nhật')+'</dd></div>'
+      +'</dl>'
+      +'<div class="status-strip">'
+      +'<div class="status-item status-item-TN"><span class="label">Tốt nghiệp:</span><span class="val '+(s.graduated?'ok':'')+'"><span class="dot"></span>'+(s.graduated?'Đã tốt nghiệp':'Chưa tốt nghiệp')+'</span></div>'
+      +'<div class="status-item status-item-SH"><span class="label">Sát hạch:</span><span class="val '+(s.passed?'ok':'')+'"><span class="dot"></span>'+esc(shText)+'</span></div>'
+      +'</div>'
+      +'</div></section>'
+      +'<div class="exam-grid">'+examCard('TN',v)+examCard('SH',v)+'</div>'
+      +'<div class="print-only small">Ngày in: '+esc(new Date().toLocaleDateString('vi-VN'))+'</div>';
+  }
+
+  function examCard(type,v){
+    const blocked=type==='TN'?v.student.graduated:v.student.passed;
+    const reg=(v.registrations||[]).find(r=>r.type===type&&r.status!=='CANCELLED'&&r.status!=='ĐÃ HỦY');
+    const waiting=reg&&(reg.waiting||reg.status==='CHỜ THI TỐT NGHIỆP');
+    const choices=(v.exams||[]).filter(e=>e.type===type&&e.available);
+    const otherType=type==='TN'?'SH':'TN';
+    const otherReg=(v.registrations||[]).find(r=>r.type===otherType&&r.status!=='CANCELLED'&&r.status!=='ĐÃ HỦY');
+    const blockedByOther=!reg&&Boolean(otherReg);
+
+    let statusTag='<span class="tag">Chưa đăng ký</span>';
+    if(blocked)statusTag='<span class="tag tag-green"><span class="dot"></span>'+(type==='TN'?'Đã tốt nghiệp':'Đã đạt')+'</span>';
+    else if(waiting)statusTag='<span class="tag tag-amber"><span class="dot"></span>Đang chờ lịch</span>';
+    else if(reg)statusTag='<span class="tag tag-green"><span class="dot"></span>Đã đăng ký</span>';
+    else if(blockedByOther)statusTag='<span class="tag tag-amber"><span class="dot"></span>Không thể đăng ký</span>';
+
+    const receiptBlock=reg?'<div class="receipt '+(waiting?'waiting':'')+'">'
+      +'<span class="tag '+(waiting?'tag-amber':'tag-green')+'">'+(waiting?'Đang chờ thi tốt nghiệp':'Đã ghi nhận đăng ký')+'</span>'
+      +(waiting?'<div class="exam-date">Chờ đợt thi tốt nghiệp sau</div>':'<div class="exam-date mono">'+esc(fmtDate(reg.examDate))+'</div><div class="exam-location">'+esc(cleanDash(reg.examLabel||typeName(type)))+'</div>')
+      +'<div class="receipt-meta">'
+      +(reg.phone?'<div><span class="muted">Số điện thoại:</span> <span class="mono">'+esc(reg.phone)+'</span></div>':'')
+      +(reg.teacher?'<div><span class="muted">Giáo viên:</span> '+esc(reg.teacher)+'</div>':'')
+      +(reg.message?'<div><span class="muted">Ghi chú:</span> '+esc(reg.message)+'</div>':'')
+      +'</div></div>'
+      +'<p class="small subtle" style="margin-top:12px">'+(waiting?'Chọn ngày thi bên dưới rồi cập nhật khi sẵn sàng':'Liên hệ trung tâm nếu cần đổi lịch')+'</p>'
+      :'';
+
+    let formBlock='';
+    if(blockedByOther){
+      const reason=type==='TN'
+        ?'Học viên đã đăng ký thi sát hạch nên không thể đăng ký thi tốt nghiệp.'
+        :'Học viên đã đăng ký thi tốt nghiệp nên không thể đăng ký thi sát hạch.';
+      formBlock='<div class="notice warning" style="margin-top:12px">'+esc(reason)+'</div>';
+    }else if(!blocked&&(!reg||waiting)){
+      const canShowForm=choices.length>0||type==='TN';
+      if(!canShowForm){
+        formBlock='<div class="notice">Chưa có lịch thi sát hạch đang mở</div>';
+      }else{
+        const teacherInput='<div class="field"><label for="registration-teacher-'+type+'">Giáo viên hướng dẫn</label>'
+          +'<input id="registration-teacher-'+type+'" type="text" autocomplete="off" required maxlength="120" value="'+esc(waiting&&reg&&reg.teacher?reg.teacher:'')+'" placeholder="Họ tên giáo viên"></div>';
+
+        const tnExtra=type==='TN'
+          ?'<label class="wait-box '+(waiting?'selected':'')+'" id="wait-box-TN"><input id="waiting-TN" type="checkbox" '+(waiting?'checked':'')+'><span>Chờ đợt thi sau (kiểm tra hồ sơ trước)</span></label>'
+          :'';
+
+        const shExtra=type==='SH'
+          ?'<div class="field"><label for="registration-phone">Số điện thoại</label><input id="registration-phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" pattern="[+0-9() .-]{9,20}" placeholder="0901234567"></div>'
+          :'';
+
+        const shMsg=type==='SH'
+          ?'<div class="field"><label for="registration-message">Ghi chú <span class="subtle small">(tùy chọn)</span></label><textarea id="registration-message" maxlength="1000" placeholder="Lời nhắn gửi trung tâm"></textarea></div>'
+          :'';
+
+        const selectHtml=choices.length
+          ?'<div class="field"><label for="exam-'+type+'">Ngày thi</label><select id="exam-'+type+'" '+(type==='TN'&&waiting?'disabled':'')+'><option value="">Chọn ngày thi</option>'+choices.map(e=>'<option value="'+esc(e.id)+'">'+esc(examChoice(e))+'</option>').join('')+'</select></div><div id="exam-detail-'+type+'"></div>'
+          :'<div class="notice warning">Chưa có ngày thi cụ thể. Có thể chọn chờ đợt thi sau bên dưới</div>';
+
+        formBlock='<form id="registration-'+type+'" class="registration-form '+(reg?'section-space':'')+'">'
+          +selectHtml
+          +tnExtra
+          +shExtra
+          +teacherInput
+          +shMsg
+          +'<div class="submit-row"><button class="btn btn-primary btn-wide" type="button" data-action="register" data-type="'+type+'">'+(waiting?'Cập nhật lựa chọn':'Đăng ký '+typeName(type).toLowerCase())+'</button></div>'
+          +'</form>';
+      }
+    }
+
+    return '<section class="card exam-card exam-card-'+type+'">'
+      +'<div class="exam-card-head"><h3>'+typeName(type)+'</h3>'+statusTag+'</div>'
+      +'<div class="exam-card-body">'
+      +(blocked?'<p class="small muted">Đã hoàn thành, không cần đăng ký thêm</p>':'')
+      +receiptBlock
+      +formBlock
+      +'</div></section>';
+  }
+
+  function renderStaff(){
+    if(!state.auth){
+      $('app').innerHTML='<div class="staff-shell"><section class="login-wrap card"><div class="card-body">'
+        +'<h2>Đăng nhập nhân sự</h2>'
+        +'<form id="login-form" class="login-form">'
+        +'<div class="field"><label for="username">Tên đăng nhập</label><input id="username" autocomplete="username" required maxlength="100"></div>'
+        +'<div class="field"><label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" required maxlength="128"></div>'
+        +'<label class="check-row"><input id="show-password" type="checkbox">Hiện mật khẩu</label>'
+        +'<button type="submit" class="btn btn-primary btn-wide">Đăng nhập</button>'
+        +'<div id="login-message" class="notice" role="alert"></div>'
+        +'</form>'
+        +(demo?'<p class="demo-hint mono">Tài khoản thử: admin / demo-admin · giaovien / demo-teacher</p>':'')
+        +'</div></section></div>';
+      return;
+    }
+    if(state.auth.role!=='admin'){renderStaffList();return}
+    if(!state.admin){$('app').innerHTML='<div class="app-loading" role="status"><span class="loading-dot"></span><p>Đang tải...</p></div>';loadAdmin();return}
+    renderAdmin();
+  }
+
+  function staffHeader(title){
+    return '<div class="staff-header"><h1>'+esc(title)+'</h1><div class="staff-actions"><span class="small muted mono">'+esc(state.auth.username)+'</span><button class="btn btn-sm" data-action="logout">'+icon('logout',16)+'Đăng xuất</button></div></div>';
+  }
+  async function loadAdmin(){
+    try{state.admin=await api('adminData',tokenPayload());if(state.page==='admin')renderAdmin()}
+    catch(e){
+      if(e.code==='UNAUTHORIZED'){state.auth=null;state.admin=null;state.staffStudent=null;render();toast(e.message);return}
+      $('app').innerHTML='<div class="boot-error card"><h2>Chưa tải được trang quản trị</h2><div class="notice error">'+esc(e.message)+'</div><button class="btn section-space" data-action="retry-admin">Thử lại</button></div>';
+    }
+  }
+  function renderAdmin(){
+    const a=state.admin,ex=a.exams||[],stats=a.stats||{},sync=a.syncStats||{};
+    const syncBar=(sync.sourceRows!=null||sync.lastSourceSyncAt||sync.lastOutboxSyncAt)
+      ?'<div class="sync-bar">'
+        +'<span><strong>TONG_HOP:</strong> '+esc(sync.sourceRows||0)+' học viên'+(sync.lastSourceSyncAt?' (đồng bộ '+esc(fmtTime(sync.lastSourceSyncAt))+')':'')+'</span>'
+        +'<span><strong>Đẩy về Sheets:</strong> '+(sync.pendingRegistrationsSync?'còn '+esc(sync.pendingRegistrationsSync)+' lượt chờ':'đã khớp')+(sync.lastOutboxSyncAt?' · '+esc(fmtTime(sync.lastOutboxSyncAt)):'')+'</span>'
+        +'</div>'
+      :'';
+    $('app').innerHTML='<div class="staff-shell">'+staffHeader('Quản lý đăng ký thi')
+      +'<div class="stat-grid">'
+      +'<div class="card stat-card"><p>Tổng đăng ký</p><strong class="mono">'+esc(stats.total==null?ex.reduce((n,e)=>n+Number(e.registered||0),0):stats.total)+'</strong></div>'
+      +'<div class="card stat-card"><p>Kỳ thi đang mở</p><strong class="mono">'+ex.filter(e=>e.open&&e.available).length+'</strong></div>'
+      +'<div class="card stat-card"><p>Chỗ còn nhận</p><strong class="mono">'+ex.filter(e=>e.available).reduce((n,e)=>n+Number(e.remaining||0),0)+'</strong></div>'
+      +'</div>'
+      +syncBar
+      +'<nav class="tabs" aria-label="Chức năng quản trị">'
+      +[['schedules','Lịch thi'],['registrations','Danh sách đăng ký'],['config','Cấu hình'],['accounts','Tài khoản']].map(([key,label])=>'<button data-admin-tab="'+key+'" class="'+(state.tab===key?'active':'')+'">'+label+'</button>').join('')
+      +'</nav>'
+      +'<div id="admin-content">'+(state.tab==='schedules'?schedulesPanel():state.tab==='registrations'?registrationsPanel():state.tab==='config'?configPanel():accountsPanel())+'</div>'
+      +'</div>';
+    if(state.tab==='registrations')loadRegistrations();
+  }
+  function schedulesPanel(){
+    const exams=(state.admin.exams||[]).filter(e=>!e.archived);
+    return '<section class="card table-card"><div class="card-head head-line"><h2>Lịch thi</h2><button class="btn btn-primary btn-sm" data-action="new-exam">'+icon('plus',16)+'Thêm kỳ thi</button></div><div class="table-scroll"><table><thead><tr><th>Kỳ thi</th><th>Ngày &amp; địa điểm</th><th>Số lượng</th><th>Hạn đăng ký</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>'
+      +exams.map(e=>'<tr><td><div>'+esc(cleanDash(e.label||typeName(e.type)))+'</div><div class="small subtle">'+typeName(e.type)+'</div></td><td><div class="mono">'+esc(fmtDate(e.date))+'</div><div class="small subtle">'+esc(cleanDash(e.location||'Chưa đặt địa điểm'))+'</div></td><td style="min-width:128px"><div class="mono">'+esc(e.registered||0)+' / '+esc(e.capacity)+'</div><div class="progress-meter"><span style="width:'+Math.min(100,Math.max(0,Number(e.registered||0)/Math.max(1,Number(e.capacity))*100))+'%"></span></div><span class="small subtle num">Còn '+esc(e.remaining==null?Math.max(0,e.capacity-(e.registered||0)):e.remaining)+'</span></td><td class="mono small">'+esc(e.cutoff?fmtTime(e.cutoff):'Không đặt hạn')+'</td><td><span class="tag '+(e.available?'tag-green':e.open?'tag-amber':'')+'">'+(e.available?'Đang mở':e.open?'Đủ chỗ / hết hạn':'Đã đóng')+'</span></td><td><div class="table-actions"><button class="btn btn-sm" data-action="edit-exam" data-id="'+esc(e.id)+'">Sửa</button><button class="btn btn-sm" data-action="toggle-exam" data-id="'+esc(e.id)+'">'+(e.open?'Đóng':'Mở')+'</button><button class="btn btn-sm" data-action="delete-exam" data-id="'+esc(e.id)+'">Lưu trữ</button></div></td></tr>').join('')
+      +(exams.length?'':'<tr><td colspan="6"><div class="empty"><h3>Chưa có kỳ thi</h3><p class="small">Thêm lịch thi để bắt đầu</p></div></td></tr>')
+      +'</tbody></table></div><div id="admin-message" class="notice" role="alert" style="margin:0 24px 20px"></div></section>';
+  }
+  function registrationsPanel(){
+    const l=state.list;
+    const ex=(state.admin&&state.admin.exams||state.boot.exams||[]).filter(e=>e.type===l.type);
+    return '<section class="card"><div class="card-body"><form id="list-filter" class="toolbar">'
+      +'<div class="field"><label for="list-type">Loại thi</label><select id="list-type"><option value="TN" '+(l.type==='TN'?'selected':'')+'>Thi tốt nghiệp</option><option value="SH" '+(l.type==='SH'?'selected':'')+'>Thi sát hạch</option></select></div>'
+      +'<div class="field"><label for="list-exam">Kỳ thi</label><select id="list-exam"><option value="">Tất cả kỳ thi</option>'+ex.map(e=>'<option value="'+esc(e.id)+'" '+(e.id===l.examId?'selected':'')+'>'+esc(fmtDate(e.date)+' - '+cleanDash(e.label))+'</option>').join('')+'</select></div>'
+      +'<div class="field search-query"><label for="list-query">Tìm học viên (tên, CCCD, khóa, GV)</label><input id="list-query" value="'+esc(l.query)+'" placeholder="Nhập tên không dấu hoặc CCCD" autocomplete="off"></div>'
+      +'<button class="btn btn-primary" type="submit">'+icon('search',16)+'Tìm</button>'
+      +'<button class="btn" type="button" data-action="export-csv">'+icon('download',16)+'Xuất CSV</button>'
+      +'</form><div id="list-message" class="notice" role="alert"></div><div id="staff-message" class="notice" role="alert"></div><div id="staff-matches">'+(state.staffMatches.length?renderStudentMatches(state.staffMatches):'')+'</div><div id="staff-result">'+(state.staffStudent?staffStudentView(state.staffStudent):'')+'</div></div>'
+      +'<div id="registration-table">'+tableSkeleton()+'</div></section>';
+  }
+  function renderStudentMatches(matches){
+    if(!matches||!matches.length)return '';
+    return '<section class="inline-matches"><div class="head-line"><strong class="small">Tìm nhanh trong TONG_HOP ('+matches.length+')</strong><button class="btn btn-sm" type="button" data-action="clear-matches">Ẩn gợi ý</button></div><div class="match-list">'
+      +matches.map(m=>'<button type="button" class="match-item" data-action="pick-student" data-ref="'+esc(m.ref)+'" data-cccd="'+esc(m.cccd||'')+'">'
+        +'<div><strong>'+esc(m.name)+'</strong> <span class="mono small muted">'+esc(m.maskedCccd)+'</span>'
+        +'<div class="small muted">'+esc([m.className,m.license,m.teacher].filter(Boolean).join(' · '))+'</div></div>'
+        +'<div class="inline-actions"><span class="tag '+(m.graduated?'tag-green':'')+'">'+(m.graduated?'Đã TN':'Chưa TN')+'</span><span class="tag '+(m.passed?'tag-green':'')+'">'+(m.passed?'Đạt SH':'Chưa SH')+'</span></div>'
+        +'</button>').join('')
+      +'</div></section>';
+  }
+  function renderRegistrationRows(result){
+    state.list.result=result;
+    const rows=result.rows||[];
+    const keys=[
+      ['name','Họ và tên'],
+      ['cccd','Căn cước'],
+      ['className','Khóa học'],
+      ['license','Hạng'],
+      ['recruitmentTeacher','GV tuyển sinh'],
+      ['teacher','Giáo viên'],
+      ['examDate','Ngày thi'],
+      ['examLabel','Tên kỳ thi'],
+      ...(state.list.type==='SH'&&authIs('admin')?[['phone','Điện thoại'],['message','Ghi chú']]:[]),
+      ['status','Trạng thái']
+    ];
+    $('registration-table').innerHTML='<div class="table-scroll"><table><thead><tr>'+keys.map(x=>'<th>'+x[1]+'</th>').join('')+'</tr></thead><tbody>'
+      +rows.map(r=>'<tr>'+keys.map(([k])=>'<td>'+esc(k==='examDate'?(r[k]?fmtDate(r[k]):'Chờ thi'):r[k]==null?'':cleanDash(r[k]))+'</td>').join('')+'</tr>').join('')
+      +(rows.length?'':'<tr><td colspan="'+keys.length+'"><div class="empty">Chưa có đăng ký</div></td></tr>')
+      +'</tbody></table></div><div class="pager"><span class="num">'+esc(result.total||0)+' đăng ký - Trang '+esc(result.page||1)+'</span><div><button class="btn btn-sm" data-action="list-prev" '+((result.page||1)<=1?'disabled':'')+'>Trang trước</button> <button class="btn btn-sm" data-action="list-next" '+((result.page||1)*(result.pageSize||50)>=result.total?'disabled':'')+'>Trang sau</button></div></div>';
+  }
+  let listRequest=0,staffRequest=0,listAbort=null,staffAbort=null,searchTimer=null;
+  function invalidateStaffSearch(includeList=true){
+    staffRequest++;
+    if(staffAbort){staffAbort.abort();staffAbort=null}
+    clearTimeout(searchTimer);
+    if(includeList){
+      listRequest++;
+      if(listAbort){listAbort.abort();listAbort=null}
+    }
+    state.staffStudent=null;state.staffCccd=null;state.staffMatches=[];
+  }
+  function staffSearchIsCurrent(token){return !!(token&&state.auth&&state.auth.token===token&&state.page==='admin'&&(state.auth.role!=='admin'||state.tab==='registrations'))}
+  function expireStaffSearch(error,token){if(!error||error.code!=='UNAUTHORIZED'||!staffSearchIsCurrent(token))return false;invalidateStaffSearch();state.auth=null;state.admin=null;render();toast(error.message);return true}
+  async function loadRegistrations(){
+    const request=++listRequest,token=state.auth&&state.auth.token,filters={type:state.list.type,examId:state.list.examId,query:state.list.query,page:state.list.page},key=listCacheKey(filters);
+    if(listAbort)listAbort.abort();
+    listAbort=new AbortController();
+    const cached=state.listCache[key];
+    if(cached&&$('registration-table'))renderRegistrationRows(cached);
+    try{
+      const result=await api('listRegistrations',Object.assign({token},filters),{signal:listAbort.signal,retries:0});
+      state.listCache[key]=result;
+      if(request===listRequest&&staffSearchIsCurrent(token)&&$('registration-table'))renderRegistrationRows(result);
+    }catch(e){
+      if(e&&e.name==='AbortError')return;
+      if(request!==listRequest||!staffSearchIsCurrent(token))return;
+      if(expireStaffSearch(e,token))return;
+      notice('list-message',e.message);
+      if(!cached&&$('registration-table'))$('registration-table').innerHTML='';
+    }
+  }
+  async function searchRegistrations(){
+    if(!$('list-type')||!$('list-exam')||!$('list-query'))return;
+    state.list.type=$('list-type').value;state.list.examId=$('list-exam').value;state.list.query=$('list-query').value.trim();state.list.page=1;
+    state.staffStudent=null;state.staffMatches=[];
+    if($('staff-result'))$('staff-result').innerHTML='';
+    if($('staff-matches'))$('staff-matches').innerHTML='';
+    notice('staff-message','');
+    const request=++staffRequest,token=state.auth&&state.auth.token,exact=state.list.query.replace(/[\s.\-]/g,'').toUpperCase();
+    if(staffAbort)staffAbort.abort();
+    staffAbort=new AbortController();
+    const work=[loadRegistrations()];
+    if(/^(?=.*\d)[A-Z0-9]{6,30}$/.test(exact)){
+      state.staffCccd=exact;$('staff-result').innerHTML='<p class="small muted" role="status">Đang tra cứu...</p>';
+      work.push((async()=>{
+        try{const student=await api('lookupStudent',{token,cccd:exact},{signal:staffAbort.signal,retries:0});if(request!==staffRequest||!staffSearchIsCurrent(token)||!$('staff-result'))return;state.staffStudent=student;$('staff-result').innerHTML=staffStudentView(student)}
+        catch(e){if(e&&e.name==='AbortError')return;if(request!==staffRequest||!staffSearchIsCurrent(token))return;if(expireStaffSearch(e,token))return;if($('staff-result'))$('staff-result').innerHTML='';notice('staff-message',e.message)}
+      })());
+    }else if(state.list.query.length>=2){
+      work.push((async()=>{
+        try{
+          const res=await api('searchStudents',{token,query:state.list.query},{signal:staffAbort.signal,retries:0});
+          if(request!==staffRequest||!staffSearchIsCurrent(token)||!$('staff-matches'))return;
+          state.staffMatches=res.matches||[];
+          $('staff-matches').innerHTML=renderStudentMatches(state.staffMatches);
+        }catch(e){if(e&&e.name==='AbortError')return;}
+      })());
+    }
+    await Promise.all(work);
+  }
+  function staffStudentView(v){
+    return '<section class="inline-student"><div class="head-line"><h3>'+esc(v.student&&v.student.name)+'</h3><button class="btn btn-sm" data-action="clear-inline">Đóng</button></div><div class="inline-fields">'
+      +(v.fields||[]).map(f=>'<div class="inline-field"><span>'+esc(f.label)+'</span><strong>'+esc(f.value||'Chưa có')+'</strong>'+(state.auth.role==='admin'&&f.editable?'<button class="btn btn-sm" data-action="edit-student-field" data-column="'+esc(f.column)+'">'+icon('edit',14)+'Sửa</button>':'')+'</div>').join('')
+      +'</div></section>';
+  }
+  function renderStaffList(){$('app').innerHTML='<div class="staff-shell">'+staffHeader('Danh sách đăng ký')+registrationsPanel()+'</div>';loadRegistrations()}
+  function accountsPanel(){
+    return '<section class="card table-card"><div class="card-head head-line"><h2>Tài khoản</h2><button class="btn btn-primary btn-sm" data-action="new-account">'+icon('plus',16)+'Thêm tài khoản</button></div><div class="table-scroll"><table><thead><tr><th>Tên đăng nhập</th><th>Vai trò</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>'
+      +(state.admin.accounts||[]).map(a=>'<tr><td>'+esc(a.username)+'</td><td>'+(a.role==='admin'?'Quản trị viên':'Giáo viên')+'</td><td><span class="tag '+(a.enabled?'tag-green':'')+'">'+(a.enabled?'Hoạt động':'Đã khóa')+'</span></td><td><button class="btn btn-sm" data-action="edit-account" data-user="'+esc(a.username)+'">Sửa</button></td></tr>').join('')
+      +'</tbody></table></div></section>';
+  }
+  function modal(title,body,footer){
+    $('modal-root').innerHTML='<div class="modal-backdrop" id="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><h2 id="modal-title">'+esc(title)+'</h2><button class="close-btn" data-action="close-modal" aria-label="Đóng">'+icon('close',16)+'</button></div><div class="modal-body">'+body+'<div id="modal-message" class="notice" role="alert"></div></div><div class="modal-footer">'+(footer||'<button class="btn" data-action="close-modal">Đóng</button>')+'</div></section></div>';
+    const focus=$('modal-root').querySelector('input,select,button');if(focus)focus.focus();
+  }
+  function closeModal(){$('modal-root').innerHTML=''}
+  function examModal(exam){
+    const e=exam||{type:'TN',date:'',label:'',location:'',capacity:100,cutoff:'',open:false};
+    modal(exam?'Sửa kỳ thi':'Thêm kỳ thi','<form id="exam-form" class="form-grid"><input type="hidden" name="id" value="'+esc(e.id||'')+'"><div class="field"><label for="exam-type">Loại thi</label><select id="exam-type" name="type" '+(exam?'disabled':'')+'><option value="TN" '+(e.type==='TN'?'selected':'')+'>Thi tốt nghiệp</option><option value="SH" '+(e.type==='SH'?'selected':'')+'>Thi sát hạch</option></select></div><div class="field"><label for="exam-date">Ngày thi</label><input id="exam-date" name="date" type="date" value="'+esc(e.date||'')+'" required></div><div class="field full"><label for="exam-label">Tên kỳ thi</label><input id="exam-label" name="label" value="'+esc(e.label)+'" required maxlength="120" placeholder="Ví dụ: Thi tốt nghiệp khóa B tháng 12"></div><div class="field full"><label for="exam-location">Địa điểm thi</label><input id="exam-location" name="location" value="'+esc(e.location||'')+'" maxlength="200" placeholder="Sân thi / địa chỉ"></div><div class="field"><label for="exam-capacity">Giới hạn đăng ký</label><input id="exam-capacity" name="capacity" type="number" min="'+Math.max(1,e.registered||0)+'" max="10000" value="'+esc(e.capacity)+'" required></div><div class="field"><label for="exam-cutoff">Hạn đăng ký (tùy chọn)</label><input id="exam-cutoff" name="cutoff" type="datetime-local" value="'+esc(e.cutoff?e.cutoff.slice(0,16):'')+'"><span class="field-help">Theo giờ Việt Nam</span></div><label class="check-row full"><input type="checkbox" name="open" '+(e.open?'checked':'')+'>Mở nhận đăng ký</label></form>','<button class="btn" data-action="close-modal">Hủy</button><button class="btn btn-primary" data-action="save-exam" data-type="'+esc(e.type)+'">Lưu</button>');
+  }
+  function accountModal(account){
+    const a=account||{username:'',role:'teacher',enabled:true};
+    modal(account?'Sửa tài khoản':'Thêm tài khoản','<form id="account-form" class="form-grid"><div class="field full"><label for="account-user">Tên đăng nhập</label><input id="account-user" value="'+esc(a.username)+'" required maxlength="100" '+(account?'readonly':'')+' autocomplete="off"></div><div class="field"><label for="account-role">Vai trò</label><select id="account-role"><option value="teacher" '+(a.role==='teacher'?'selected':'')+'>Giáo viên</option><option value="admin" '+(a.role==='admin'?'selected':'')+'>Quản trị viên</option></select></div><div class="field"><label for="account-password">'+(account?'Mật khẩu mới (nếu đổi)':'Mật khẩu')+'</label><input id="account-password" type="password" minlength="12" maxlength="200" '+(!account?'required':'')+' autocomplete="new-password"><span class="field-help">Tối thiểu 12 ký tự</span></div><label class="check-row full"><input id="account-enabled" type="checkbox" '+(a.enabled?'checked':'')+'>Cho phép đăng nhập</label></form>','<button class="btn" data-action="close-modal">Hủy</button><button class="btn btn-primary" data-action="save-account">Lưu</button>');
+  }
+  async function refreshAdmin(){state.admin=await api('adminData',tokenPayload());renderAdmin()}
+
+  function confirmRegistration(type){
+    const form=$('registration-'+type),select=$('exam-'+type),waiting=type==='TN'&&$('waiting-TN')&&$('waiting-TN').checked;
+    if(!form||!form.reportValidity())return;
+    if(!waiting&&(!select||!select.value)){toast('Chọn ngày thi');if(select)select.focus();return}
+    const ex=!waiting&&state.view.exams.find(e=>e.id===select.value);if(!waiting&&!ex)return;
+    const teacherEl=$('registration-teacher-'+type);
+    const teacher=teacherEl?teacherEl.value.trim():'';
+    const phone=type==='SH'?$('registration-phone').value.trim():'';
+    const message=type==='SH'?$('registration-message').value.trim():'';
+    if(type==='SH'&&!/^(?:0[0-9]{9,10}|(?:\+84|84)[0-9]{9,10})$/.test(phone.replace(/[\s().-]/g,''))){
+      toast('Số điện thoại không hợp lệ (10-11 số hoặc +84)');$('registration-phone').focus();return;
+    }
+    if(!teacher){toast('Nhập tên giáo viên hướng dẫn');if(teacherEl)teacherEl.focus();return}
+    state.pendingRegistration={type,examId:ex?ex.id:'',waiting,phone,teacher,message};
+    modal(
+      waiting?'Xác nhận chờ thi tốt nghiệp':'Xác nhận đăng ký thi',
+      '<h3>'+esc(state.view.student.name)+'</h3>'
+      +'<div class="receipt '+(waiting?'waiting':'')+' section-space">'
+      +(waiting?'<div class="exam-date" style="margin-top:0">Chờ đợt thi tốt nghiệp sau</div>':'<span class="small">'+typeName(type)+'</span><div class="exam-date mono">'+esc(fmtDate(ex.date))+'</div><div>'+esc(cleanDash(ex.label))+'</div>'+(ex.location?'<div class="muted small">'+esc(cleanDash(ex.location))+'</div>':''))
+      +'<div class="receipt-meta">'
+      +(phone?'<div><span class="muted">Số điện thoại:</span> <span class="mono">'+esc(phone)+'</span></div>':'')
+      +'<div><span class="muted">Giáo viên:</span> '+esc(teacher)+'</div>'
+      +(message?'<div><span class="muted">Ghi chú:</span> '+esc(message)+'</div>':'')
+      +'</div></div>'
+      +'<p class="small muted" style="margin-top:16px">Sau khi xác nhận, học viên không thể tự đổi ngày thi trên web</p>',
+      '<button class="btn" data-action="close-modal">Quay lại</button><button class="btn btn-primary" data-action="commit-registration">'+(waiting?'Xác nhận chờ thi':'Xác nhận đăng ký')+'</button>'
+    );
+  }
+
+  async function exportCsv(button){
+    setBusy(button,true,'Đang xuất...');
+    try{
+      let rows=[],page=1,total=Infinity;
+      while(rows.length<total){
+        const r=await api('listRegistrations',tokenPayload({type:state.list.type,examId:state.list.examId,query:state.list.query,page,export:true}));
+        rows=rows.concat(r.rows||[]);total=Number(r.total||0);if(!(r.rows||[]).length)break;page++;
+        if(page>1000)throw new Error('Danh sách quá lớn. Hãy lọc theo từng kỳ thi để xuất.');
+      }
+      const columns=[['createdAt','Thời gian đăng ký'],['name','Họ và tên'],['cccd','Căn cước'],['dob','Ngày sinh'],['className','Khóa học'],['license','Hạng'],['recruitmentTeacher','GV tuyển sinh'],['teacher','Giáo viên'],['examDate','Ngày thi'],['examLabel','Kỳ thi'],...(state.list.type==='SH'&&authIs('admin')?[['phone','Số điện thoại học viên'],['message','Lời nhắn']]:[]),['status','Trạng thái']];
+      const cell=v=>{let s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+      const csv='\ufeff'+[columns.map(c=>cell(c[1])).join(','),...rows.map(r=>columns.map(c=>cell(['dob','examDate'].includes(c[0])?(r[c[0]]?fmtDate(r[c[0]]):''):c[0]==='createdAt'?fmtTime(r[c[0]]):r[c[0]])).join(','))].join('\r\n');
+      const link=document.createElement('a');
+      link.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+      link.download=(state.list.type==='TN'?'thi-tot-nghiep':'thi-sat-hach')+'-'+new Date().toISOString().slice(0,10)+'.csv';
+      link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+      toast('Đã xuất '+rows.length+' đăng ký.');
+    }catch(e){toast(e.message)}finally{setBusy(button,false)}
+  }
+
+  document.addEventListener('input',event=>{
+    if(event.target.id==='cccd'){
+      state.cccdInput=event.target.value;
+      const clearBtn=document.querySelector('[data-action="clear-cccd"]');
+      if(clearBtn)clearBtn.hidden=!state.cccdInput;
+    }else if(event.target.id==='list-query'){
+      clearTimeout(searchTimer);
+      searchTimer=setTimeout(()=>searchRegistrations(),180);
+    }
+  });
+
+  document.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const form=event.target,button=form.querySelector('button[type=submit]');
+    if(!form.reportValidity())return;
+    setBusy(button,true);
+    try{
+      if(form.id==='lookup-form'){
+        notice('lookup-message','');state.view=null;
+        const cleaned=$('cccd').value.trim().replace(/[\s.\-]/g,'').toUpperCase();
+        state.cccdInput=$('cccd').value.trim();
+        if(!/^[A-Z0-9]{6,30}$/.test(cleaned)){
+          syncStudentView();
+          notice('lookup-message','Nhập căn cước/CMND/hộ chiếu hợp lệ (từ 6 ký tự chữ hoặc số).');
+          return;
+        }
+        $('student-result').innerHTML=studentSkeleton();
+        state.view=await api('lookup',{cccd:cleaned});
+        syncStudentView();
+        $('student-profile').scrollIntoView({behavior:'smooth',block:'start'});
+      }else if(form.id==='login-form'){
+        notice('login-message','');
+        const res=await api('login',{username:$('username').value.trim(),password:$('password').value});
+        state.auth={token:res.token,username:res.username,role:res.role};
+        state.listCache=Object.create(null);
+        state.admin=res.admin||null;
+        if(res.initialList)state.listCache[listCacheKey({type:'TN',examId:'',query:'',page:1})]=res.initialList;
+        $('password').value='';state.page='admin';state.tab=state.auth.role==='admin'?'schedules':'registrations';render();
+      }else if(form.id==='list-filter'){
+        clearTimeout(searchTimer);
+        await searchRegistrations();
+      }else if(form.id==='config-form'){
+        await submitConfig();
+      }
+    }catch(e){
+      if(form.id==='lookup-form')syncStudentView();
+      notice(form.id==='lookup-form'?'lookup-message':form.id==='login-form'?'login-message':form.id==='config-form'?'config-message':'list-message',e.message);
+      if(e.code==='UNAUTHORIZED'){state.auth=null;state.admin=null;state.staffStudent=null;state.listCache=Object.create(null);render();toast(e.message)}
+    }finally{setBusy(button,false)}
+  });
+
+  document.addEventListener('change',async event=>{
+    const t=event.target;
+    if(t.id==='show-password'&&$('password')){$('password').type=t.checked?'text':'password';return}
+    if(t.id==='logo-file'){try{await prepareLogo(t.files[0])}catch(e){notice('config-message',e.message)}return}
+    if(t.id==='cfg-logo'){t.dataset.logoValue=t.value.trim();showLogoPreview(t.dataset.logoValue);return}
+    if(t.id==='list-type'){invalidateStaffSearch();state.list.type=t.value;state.list.examId='';state.list.query=$('list-query').value;state.list.page=1;if(state.auth.role==='admin')renderAdmin();else renderStaffList();return}
+    if(t.id==='list-exam'){clearTimeout(searchTimer);searchRegistrations();return}
+    if(t.id==='waiting-TN'){
+      const box=$('wait-box-TN');if(box)box.classList.toggle('selected',t.checked);
+      if($('exam-TN')){$('exam-TN').disabled=t.checked;if(t.checked){$('exam-TN').value='';if($('exam-detail-TN'))$('exam-detail-TN').innerHTML=''}}
+      return;
+    }
+    if(t.id==='exam-TN'||t.id==='exam-SH'){
+      const type=t.id.slice(-2),e=state.view.exams.find(e=>e.id===t.value);
+      if(type==='TN'&&e&&$('waiting-TN')){$('waiting-TN').checked=false;const box=$('wait-box-TN');if(box)box.classList.remove('selected')}
+      $('exam-detail-'+type).innerHTML=e?'<div class="exam-detail-box">'+(e.location?'<div><span class="muted">Địa điểm:</span> '+esc(cleanDash(e.location))+'</div>':'')+'<div><span class="muted">Hạn đăng ký:</span> <span class="mono">'+esc(e.cutoff?fmtTime(e.cutoff):'Đến trước ngày thi')+'</span></div></div>':'';
+    }
+  });
+
+  document.addEventListener('click',async event=>{
+    const nav=event.target.closest('[data-nav]');
+    if(nav){invalidateStaffSearch();state.page=nav.dataset.nav;state.tab='schedules';render();return}
+    const tab=event.target.closest('[data-admin-tab]');
+    if(tab){invalidateStaffSearch();state.tab=tab.dataset.adminTab;renderAdmin();return}
+    const button=event.target.closest('[data-action]');
+    if(!button)return;
+    const action=button.dataset.action;
+    if(action==='close-modal'){closeModal();return}
+    if(action==='clear-cccd'){state.cccdInput='';if($('cccd')){$('cccd').value='';$('cccd').focus()}button.hidden=true;notice('lookup-message','');return}
+    if(action==='reset-lookup'){state.view=null;state.cccdInput='';if($('cccd'))$('cccd').value='';const cb=document.querySelector('[data-action="clear-cccd"]');if(cb)cb.hidden=true;notice('lookup-message','');syncStudentView();if($('cccd'))$('cccd').focus();return}
+    if(action==='clear-inline'){state.staffStudent=null;state.staffCccd=null;if($('staff-result'))$('staff-result').innerHTML='';notice('staff-message','');return}
+    if(action==='clear-matches'){state.staffMatches=[];if($('staff-matches'))$('staff-matches').innerHTML='';return}
+    if(action==='print'){window.print();return}
+    if(action==='new-exam'){examModal();return}
+    if(action==='edit-exam'){examModal(state.admin.exams.find(e=>e.id===button.dataset.id));return}
+    if(action==='new-account'){accountModal();return}
+    if(action==='edit-account'){accountModal(state.admin.accounts.find(a=>a.username===button.dataset.user));return}
+    if(action==='register'){confirmRegistration(button.dataset.type);return}
+    if(action==='export-csv'){exportCsv(button);return}
+    if(action==='edit-student-field'){
+      const f=state.staffStudent.fields.find(f=>f.column===button.dataset.column);
+      modal('Chỉnh sửa '+f.label,'<p class="small muted">'+esc(state.staffStudent.student.name)+' - Cột '+esc(f.column)+'</p><div class="field section-space"><label for="student-field-value">'+esc(f.label)+'</label><input id="student-field-value" value="'+esc(f.value)+'" maxlength="500"></div>','<button class="btn" data-action="close-modal">Hủy</button><button class="btn btn-primary" data-action="save-student-field" data-column="'+esc(f.column)+'">Lưu thay đổi</button>');
+      return;
+    }
+    setBusy(button,true);
+    if($('modal-message'))notice('modal-message','');
+    function applyExamsUpdate(exams){
+      if(!exams)return false;
+      state.admin.exams=exams;
+      if(state.admin.stats)state.admin.stats.openExams=exams.filter(e=>e.available).length;
+      if(state.boot)state.boot.exams=exams.filter(e=>!e.archived);
+      renderAdmin();return true;
+    }
+    try{
+      if(action==='logout'){invalidateStaffSearch();await api('logout',tokenPayload());state.auth=null;state.admin=null;state.staffStudent=null;state.listCache=Object.create(null);render();}
+      else if(action==='retry-admin'){await loadAdmin();}
+      else if(action==='refresh-student'){const s=state.view;if(!s)return;state.view=await api('lookup',{token:s.token});syncStudentView();toast('Đã cập nhật.');}
+      else if(action==='commit-registration'){state.view=await api('register',Object.assign({token:state.view.token},state.pendingRegistration));state.pendingRegistration=null;state.listCache=Object.create(null);if(state.boot&&state.view.exams)state.boot.exams=state.view.exams;closeModal();syncStudentView();toast('Đăng ký thành công.');}
+      else if(action==='pick-student'){
+        const ref=button.dataset.ref,rawCccd=button.dataset.cccd,token=state.auth&&state.auth.token;
+        const student=await api('lookupStudent',rawCccd?{token,cccd:rawCccd}:{token,studentRef:ref});
+        state.staffStudent=student;state.staffCccd=rawCccd||'';state.staffStudentRef=student.studentRef||ref;
+        if($('staff-result'))$('staff-result').innerHTML=staffStudentView(student);
+        notice('staff-message','');
+      }
+      else if(action==='save-exam'){const form=$('exam-form');if(!form.reportValidity())return;const fd=new FormData(form);const e={id:fd.get('id')||undefined,type:fd.get('type')||button.dataset.type,date:inputDate(fd.get('date')),label:fd.get('label'),location:fd.get('location'),capacity:Number(fd.get('capacity')),cutoff:inputTime(fd.get('cutoff')),open:fd.get('open')==='on'};const res=await api('saveExam',tokenPayload({exam:e}));closeModal();if(!applyExamsUpdate(res&&res.exams))await refreshAdmin();toast('Đã lưu kỳ thi.');}
+      else if(action==='toggle-exam'){const e=state.admin.exams.find(e=>e.id===button.dataset.id);const res=await api('saveExam',tokenPayload({exam:Object.assign({},e,{open:!e.open})}));if(!applyExamsUpdate(res&&res.exams))await refreshAdmin();toast(e.open?'Đã đóng đăng ký kỳ thi.':'Đã mở đăng ký kỳ thi.');}
+      else if(action==='delete-exam'){const e=state.admin.exams.find(e=>e.id===button.dataset.id);modal('Lưu trữ kỳ thi','<p>Lưu trữ kỳ thi <strong>'+esc(cleanDash(e.label))+'</strong> ngày '+esc(fmtDate(e.date))+'?</p>','<button class="btn" data-action="close-modal">Giữ kỳ thi</button><button class="btn btn-danger" data-action="commit-delete-exam" data-id="'+esc(e.id)+'">Lưu trữ kỳ thi</button>');}
+      else if(action==='commit-delete-exam'){const res=await api('deleteExam',tokenPayload({id:button.dataset.id}));closeModal();if(!applyExamsUpdate(res&&res.exams))await refreshAdmin();toast('Đã lưu trữ kỳ thi.');}
+      else if(action==='list-prev'||action==='list-next'){state.list.page+=action==='list-next'?1:-1;await loadRegistrations();}
+      else if(action==='save-account'){if(!$('account-form').reportValidity())return;const res=await api('saveAccount',tokenPayload({username:$('account-user').value.trim(),role:$('account-role').value,password:$('account-password').value,enabled:$('account-enabled').checked}));closeModal();if(res&&res.accounts){state.admin.accounts=res.accounts;renderAdmin();}else await refreshAdmin();toast('Đã lưu tài khoản.');}
+      else if(action==='save-student-field'){const changes={},column=button.dataset.column,value=$('student-field-value').value;changes[column]=state.admin&&column===state.admin.config.source.columns.dob?inputDate(value):value;const keyPayload=state.staffCccd?{cccd:state.staffCccd}:{studentRef:state.staffStudentRef||state.staffStudent.studentRef};state.staffStudent=await api('updateStudent',tokenPayload(Object.assign(keyPayload,{rowVersion:state.staffStudent.rowVersion,changes})));closeModal();$('staff-result').innerHTML=staffStudentView(state.staffStudent);toast('Đã lưu thay đổi (sẽ tự đẩy về TONG_HOP).');}
+      else if(action==='inspect-source'){await inspectSource();}
+    }catch(e){
+      if(e.code==='UNAUTHORIZED'){closeModal();state.auth=null;state.admin=null;state.staffStudent=null;state.listCache=Object.create(null);render();toast(e.message);}
+      else if($('modal-message'))notice('modal-message',e.message);
+      else if($('admin-message'))notice('admin-message',e.message);
+      else toast(e.message);
+    }finally{setBusy(button,false)}
+  });
+
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape')closeModal();
+    if(event.key==='Tab'&&$('modal-backdrop')){
+      const els=[...$('modal-backdrop').querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]')].filter(el=>!el.hidden&&el.offsetParent!==null);
+      const first=els[0],last=els[els.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+    }
+  });
+
+  function sourceMapFields(){return [['cccd','Căn cước / CMND'],['name','Họ và tên'],['dob','Ngày sinh'],['className','Lớp / khóa học'],['license','Hạng đào tạo'],['phone','Số điện thoại (nếu có)'],['teacher','GV tuyển sinh'],['graduation','Số quyết định tốt nghiệp'],['driving','Kết quả sát hạch']]}
+  function outputMapFields(){return [['createdAt','Thời gian đăng ký'],['cccd','Căn cước'],['name','Họ và tên'],['dob','Ngày sinh'],['className','Khóa học'],['license','Hạng'],['phone','Điện thoại'],['recruitmentTeacher','GV tuyển sinh'],['teacher','Giáo viên'],['examDate','Ngày thi'],['examLabel','Tên đợt thi'],['status','Trạng thái'],['message','Lời nhắn']];}
+
+  function configPanel(){
+    const c=state.admin.config,s=c.source,d=c.destination;
+    return '<section class="card"><div class="card-head"><h2>Kết nối Google Sheets</h2></div><form id="config-form" class="card-body">'
+      +'<div class="form-grid"><div class="field"><label for="cfg-center">Tên trung tâm</label><input id="cfg-center" value="'+esc(c.centerName)+'" required maxlength="150"></div><div class="field"><label for="cfg-notice">Thông báo cho học viên</label><input id="cfg-notice" value="'+esc(c.notice||'')+'" maxlength="1000"></div></div>'
+      +'<div class="card-subsection"><h3>Logo trung tâm</h3><div class="form-grid"><div class="field"><label for="logo-file">Chọn ảnh logo</label><input id="logo-file" type="file" accept="image/png,image/jpeg,image/webp"><span class="field-help">PNG, JPG hoặc WebP. Chọn ảnh để xem trước, rồi lưu cấu hình.</span></div><div class="field"><label for="cfg-logo">Đường dẫn ảnh HTTPS (tùy chọn)</label><input id="cfg-logo" value="'+esc(/^https:\/\//i.test(c.logoUrl||'')?c.logoUrl:'')+'" data-logo-value="'+esc(c.logoUrl||'')+'" maxlength="2000" placeholder="https://..."><img id="logo-preview" alt="Logo xem trước" src="'+esc(c.logoUrl||'')+'" style="width:76px;height:76px;object-fit:contain;margin-top:6px" '+(c.logoUrl?'':'hidden')+'></div></div></div>'
+      +'<div class="card-subsection"><h3>Bảng nguồn học viên</h3><div class="form-grid"><div class="field full"><label for="cfg-source-id">Link Google Sheets hoặc mã file nguồn</label><input id="cfg-source-id" value="'+esc(s.spreadsheetId)+'" required autocomplete="off"></div><div class="field"><label for="cfg-source-tab">Tên tab nguồn</label><input id="cfg-source-tab" value="'+esc(s.sheetName)+'" required></div><div class="field"><label for="cfg-header-row">Hàng tiêu đề</label><input id="cfg-header-row" type="number" min="1" max="50" value="'+esc(s.headerRow)+'" required></div></div><button class="btn section-space" type="button" data-action="inspect-source">'+icon('search',16)+'Xem tiêu đề cột đã đồng bộ</button><div id="source-headers" class="help-box" hidden></div><div class="config-map section-space">'+sourceMapFields().map(([k,label])=>'<div class="field"><label for="cfg-source-'+k+'">'+label+'</label><input id="cfg-source-'+k+'" value="'+esc(s.columns[k]||'')+'" pattern="[a-zA-Z]*" maxlength="3" '+(['cccd','name','dob','graduation','driving'].includes(k)?'required':'')+' placeholder="Chữ cột"></div>').join('')+'</div></div>'
+      +'<div class="card-subsection"><h3>Hai file nhận đăng ký</h3><div class="form-grid"><div class="field full"><label for="cfg-target-TN">Link file đăng ký thi tốt nghiệp</label><input id="cfg-target-TN" value="'+esc(d.spreadsheetIds.TN)+'" required autocomplete="off"></div><div class="field full"><label for="cfg-tab-TN">Tên tab nhận đăng ký tốt nghiệp</label><input id="cfg-tab-TN" value="'+esc(d.sheets.TN)+'" required></div><div class="field full"><label for="cfg-target-SH">Link file đăng ký thi sát hạch</label><input id="cfg-target-SH" value="'+esc(d.spreadsheetIds.SH)+'" required autocomplete="off"></div><div class="field full"><label for="cfg-tab-SH">Tên tab nhận đăng ký sát hạch</label><input id="cfg-tab-SH" value="'+esc(d.sheets.SH)+'" required></div></div><div class="config-map section-space">'+outputMapFields().map(([k,label])=>'<div class="field"><label for="cfg-output-'+k+'">'+label+'</label><input id="cfg-output-'+k+'" value="'+esc(d.columns[k]||'')+'" pattern="[a-zA-Z]+" maxlength="3" required></div>').join('')+'</div></div>'
+      +'<div class="card-subsection"><h3>Cột trạng thái hiển thị</h3><div class="field"><label for="cfg-status-columns">Cột | Tên hiển thị</label><textarea id="cfg-status-columns" placeholder="G | Rút hồ sơ&#10;J | Tốt nghiệp&#10;K | Sát hạch">'+esc((s.statusColumns||[]).map(x=>x.column+' | '+x.label).join('\n'))+'</textarea></div><div class="field section-space"><label for="cfg-editable">Cột quản trị viên được phép sửa</label><input id="cfg-editable" value="'+esc((s.editableColumns||[]).join(', '))+'" placeholder="Ví dụ: G, H, I, J, K"></div></div>'
+      +'<div id="config-message" class="notice" role="alert"></div><div class="head-line section-space"><button class="btn btn-primary" type="submit">Lưu cấu hình</button></div></form></section>';
+  }
+  function extractSheetId(value){const text=value.trim();const match=text.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);return match?match[1]:text}
+  async function submitConfig(){
+    const c=JSON.parse(JSON.stringify(state.admin.config));
+    c.centerName=$('cfg-center').value.trim();c.notice=$('cfg-notice').value.trim();
+    c.logoUrl=$('cfg-logo').value.trim()||$('cfg-logo').dataset.logoValue||'';
+    c.requireDob=false;c.maxChanges=0;
+    c.source.spreadsheetId=extractSheetId($('cfg-source-id').value);
+    c.source.sheetName=$('cfg-source-tab').value.trim();
+    c.source.headerRow=Number($('cfg-header-row').value);
+    sourceMapFields().forEach(([k])=>c.source.columns[k]=$('cfg-source-'+k).value.trim().toUpperCase());
+    ['TN','SH'].forEach(type=>{c.destination.spreadsheetIds[type]=extractSheetId($('cfg-target-'+type).value);c.destination.sheets[type]=$('cfg-tab-'+type).value.trim()});
+    outputMapFields().forEach(([k])=>c.destination.columns[k]=$('cfg-output-'+k).value.trim().toUpperCase());
+    c.source.statusColumns=$('cfg-status-columns').value.split('\n').filter(x=>x.trim()).map(line=>{const parts=line.split('|');if(parts.length!==2||!parts[0].trim()||!parts[1].trim())throw new Error('Mỗi dòng trạng thái cần có dạng: J | Tốt nghiệp');return {column:parts[0].trim().toUpperCase(),label:parts[1].trim()}});
+    c.source.editableColumns=$('cfg-editable').value.split(',').map(x=>x.trim().toUpperCase()).filter(Boolean);
+    const res=await api('saveConfig',tokenPayload({config:c}));
+    state.admin.config=(res&&res.config)||c;state.boot=(res&&res.boot)||await api('bootstrap');applyBrand();
+    notice('config-message','Đã lưu.','success');toast('Đã lưu cấu hình.');
+  }
+  function showLogoPreview(value){const img=$('logo-preview');const valid=/^https:\/\//i.test(value)||/^data:image\/(png|jpeg|webp);base64,/i.test(value);img.hidden=!valid;if(valid)img.src=value;else img.removeAttribute('src')}
+  async function prepareLogo(file){
+    if(!file)return;
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Chọn ảnh PNG, JPG hoặc WebP.');
+    if(file.size>10*1024*1024)throw new Error('Chọn ảnh logo nhỏ hơn 10 MB.');
+    const image=await createImageBitmap(file);
+    try{
+      const canvas=document.createElement('canvas');let data='';
+      for(const size of [160,128,96,72,48]){
+        const ratio=Math.min(size/image.width,size/image.height,1);
+        canvas.width=Math.max(1,Math.round(image.width*ratio));canvas.height=Math.max(1,Math.round(image.height*ratio));
+        canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+        data=canvas.toDataURL('image/webp',0.75);if(data.length<=4000)break;
+      }
+      if(data.length>4000)throw new Error('Ảnh quá phức tạp. Hãy dùng logo đơn giản hơn hoặc đường dẫn HTTPS.');
+      $('cfg-logo').dataset.logoValue=data;$('cfg-logo').value='';$('cfg-logo').placeholder='Logo đã chọn từ máy';
+      showLogoPreview(data);notice('config-message','Đã chọn logo. Bấm Lưu cấu hình để áp dụng.','success');
+    }finally{image.close()}
+  }
+  async function inspectSource(){
+    const r=await api('inspectSource',tokenPayload({spreadsheetId:extractSheetId($('cfg-source-id').value),sheetName:$('cfg-source-tab').value.trim(),headerRow:Number($('cfg-header-row').value)}));
+    $('source-headers').hidden=false;$('source-headers').textContent=(r.headers||[]).length?(r.headers||[]).map(x=>x.column+': '+x.label).join(' | '):'Chưa đồng bộ tiêu đề từ TONG_HOP.';
+  }
+
+  const mockConfig={centerName:'Trung tâm Minh Khang',notice:'',requireDob:false,maxChanges:0,source:{spreadsheetId:'1dA9hBzoPaEVB2n6izORRAoBpx44GkSFGmpteTDPP9iU',sheetName:'TONG_HOP',headerRow:1,columns:{cccd:'A',name:'C',dob:'D',className:'B',license:'L',phone:'',teacher:'F',graduation:'J',driving:'K'},statusColumns:[{column:'G',label:'Tình trạng hồ sơ'},{column:'J',label:'Tốt nghiệp'},{column:'K',label:'Sát hạch'}],editableColumns:['G','J','K']},destination:{spreadsheetIds:{TN:'18ZvpLG4h8dAxnwvyhBs-FlXNmw0TL2g7_OkbrHG9NV8',SH:'1CegfVYRfTPlogVBRKvT_bzQkdxvakhbfVDVkUe4algI'},sheets:{TN:'WEB_DANG_KY',SH:'WEB_DANG_KY'},columns:{createdAt:'D',cccd:'E',name:'F',dob:'G',className:'H',license:'I',phone:'J',recruitmentTeacher:'K',teacher:'L',examDate:'M',examLabel:'N',status:'O',message:'P'}}};
+  const mock={config:mockConfig,exams:[{id:'demo-tn-1',type:'TN',date:'2026-12-05',label:'Tốt nghiệp tháng 12 - Đợt 1',location:'Sân đào tạo của trung tâm',capacity:100,registered:68,open:true,cutoff:'2026-12-03T17:00'},{id:'demo-tn-2',type:'TN',date:'2026-12-12',label:'Tốt nghiệp tháng 12 - Đợt 2',location:'Sân đào tạo của trung tâm',capacity:100,registered:24,open:true,cutoff:'2026-12-10T17:00'},{id:'demo-sh-1',type:'SH',date:'2026-12-19',label:'Sát hạch tháng 12',location:'Trung tâm sát hạch',capacity:150,registered:124,open:true,cutoff:'2026-12-16T17:00'}],accounts:[{username:'admin',role:'admin',enabled:true},{username:'giaovien',role:'teacher',enabled:true}],registrations:[],studentId:'000000000001',sessions:{},fields:{G:'Đang học',J:'',K:''}};
+  function mockExams(){return mock.exams.map(e=>Object.assign({},e,{remaining:Math.max(0,e.capacity-e.registered),available:e.open&&e.registered<e.capacity}))}
+  function mockStudent(id){const suffix=id.slice(-1);return {name:'Nguyễn Học Viên '+(suffix==='1'?'Mẫu':suffix==='2'?'Tốt Nghiệp':'Sát Hạch'),dob:'2000-01-01',className:'Khóa B - Tháng 11/2026',license:'B',maskedCccd:'********'+id.slice(-4),graduated:suffix==='2'||/^QĐMK/i.test(mock.fields.J),passed:suffix==='3'||mock.fields.K==='ĐẠT',statuses:[{label:'Tình trạng hồ sơ',value:mock.fields.G},{label:'Sát hạch',value:mock.fields.K||'Chưa có kết quả đạt'}]}}
+  function mockView(){return {token:'demo-student-'+mock.studentId,student:mockStudent(mock.studentId),registrations:mock.registrations.filter(r=>r.cccd===mock.studentId),exams:mockExams()}}
+  async function mockApi(action,p){
+    await new Promise(r=>setTimeout(r,80));
+    if(action==='bootstrap')return {centerName:mock.config.centerName,notice:mock.config.notice,logoUrl:mock.config.logoUrl||'',requireDob:mock.config.requireDob,maxChanges:0,exams:mockExams()};
+    if(action==='lookup'){if(!p.token){if(!/^00000000000[123]$/.test(p.cccd))throw new Error('Không tìm thấy học viên.');mock.studentId=p.cccd;}return mockView()}
+    if(action==='register'){
+      const s=mockStudent(mock.studentId);
+      if(p.type==='TN'&&s.graduated)throw new Error('Học viên đã tốt nghiệp, không thể đăng ký tốt nghiệp.');
+      if(p.type==='SH'&&s.passed)throw new Error('Học viên đã đạt sát hạch, không thể đăng ký lại.');
+      const otherType=p.type==='TN'?'SH':'TN';
+      const otherReg=mock.registrations.find(r=>r.cccd===mock.studentId&&r.type===otherType&&r.status!=='CANCELLED'&&r.status!=='ĐÃ HỦY');
+      if(otherReg)throw new Error(p.type==='TN'?'Học viên đã đăng ký thi sát hạch nên không thể đăng ký thi tốt nghiệp.':'Học viên đã đăng ký thi tốt nghiệp nên không thể đăng ký thi sát hạch.');
+      const old=mock.registrations.find(r=>r.cccd===mock.studentId&&r.type===p.type);
+      if(old&&!old.waiting)throw new Error('Học viên đã có đăng ký cho loại thi này.');
+      if(p.type==='SH'&&!p.phone)throw new Error('Nhập số điện thoại học viên.');
+      if(!p.teacher||!String(p.teacher).trim())throw new Error('Vui lòng nhập tên giáo viên.');
+      const waiting=p.type==='TN'&&p.waiting;
+      const ex=!waiting&&mockExams().find(e=>e.id===p.examId&&e.type===p.type);
+      if(!waiting&&(!ex||!ex.available))throw new Error('Kỳ thi đã đóng hoặc không còn chỗ.');
+      if(ex)mock.exams.find(e=>e.id===ex.id).registered++;
+      const reg={id:old?old.id:'DK-'+String(mock.registrations.length+1).padStart(6,'0'),createdAt:new Date().toISOString(),type:p.type,cccd:mock.studentId,name:s.name,dob:s.dob,className:s.className,license:s.license,phone:p.type==='SH'?p.phone:'',recruitmentTeacher:'GV Tuyển Sinh Mẫu',teacher:String(p.teacher).trim(),message:p.type==='SH'?p.message:'',examId:ex?ex.id:'',examDate:ex?ex.date:'',examLabel:ex?ex.label:'Chờ thi tốt nghiệp sau - muốn check trước',status:waiting?'CHỜ THI TỐT NGHIỆP':'ĐÃ ĐĂNG KÝ',waiting};
+      if(old)Object.assign(old,reg);else mock.registrations.push(reg);
+      return mockView();
+    }
+    if(action==='login'){const a=mock.accounts.find(a=>a.username===p.username&&a.enabled);if(!a||p.password!==(a.role==='admin'?'demo-admin':'demo-teacher'))throw new Error('Tên đăng nhập hoặc mật khẩu không đúng.');const token='demo-auth-'+a.username;mock.sessions[token]=a;const out={token,role:a.role,username:a.username};if(a.role==='admin')out.admin={config:JSON.parse(JSON.stringify(mock.config)),exams:mockExams(),accounts:mock.accounts.map(x=>Object.assign({},x)),stats:{total:mock.registrations.length}};else out.initialList={total:mock.registrations.filter(r=>r.type==='TN').length,page:1,pageSize:50,rows:mock.registrations.filter(r=>r.type==='TN').slice(0,50).map(r=>Object.assign({},r,{cccd:'********'+r.cccd.slice(-4)}))};return out}
+    if(action==='logout'){delete mock.sessions[p.token];return {success:true}}
+    const account=mock.sessions[p.token];if(!account)throw new Error('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');
+    if(!['lookupStudent','searchStudents','listRegistrations'].includes(action)&&account.role!=='admin')throw new Error('Bạn không có quyền thực hiện thao tác này.');
+    if(action==='adminData')return {config:JSON.parse(JSON.stringify(mock.config)),exams:mockExams(),accounts:mock.accounts.map(a=>Object.assign({},a)),stats:{total:mock.registrations.length}};
+    if(action==='saveConfig'){mock.config=JSON.parse(JSON.stringify(p.config));return {config:mock.config,boot:{centerName:mock.config.centerName,notice:mock.config.notice,logoUrl:mock.config.logoUrl||'',requireDob:mock.config.requireDob,maxChanges:0,exams:mockExams()}}}
+    if(action==='saveExam'){const e=p.exam;let old=e.id&&mock.exams.find(x=>x.id===e.id);if(old){if(e.capacity<old.registered)throw new Error('Giới hạn không thể nhỏ hơn số người đã đăng ký.');Object.assign(old,e)}else mock.exams.push(Object.assign({},e,{id:'demo-'+Date.now(),registered:0}));return {exam:old||e,exams:mockExams()}}
+    if(action==='deleteExam'){mock.exams=mock.exams.filter(e=>e.id!==p.id);return {archived:true,exams:mockExams()}}
+    if(action==='listRegistrations'){const limit=p.export?2000:p.all?5000:50,page=p.all?1:(p.page||1);let rows=mock.registrations.filter(r=>r.type===p.type&&(!p.examId||r.examId===p.examId)&&(!p.query||(r.name+' '+r.cccd+' '+r.teacher+' '+r.recruitmentTeacher).toLowerCase().includes(p.query.toLowerCase()))).map(r=>Object.assign({},r,{cccd:account.role==='teacher'?'********'+r.cccd.slice(-4):r.cccd}));return {total:rows.length,page,pageSize:limit,rows:rows.slice((page-1)*limit,page*limit)}}
+    if(action==='searchStudents')return {matches:['000000000001','000000000002','000000000003'].map(id=>Object.assign({ref:id,cccd:account.role==='admin'?id:undefined},mockStudent(id))).filter(s=>s.name.toLowerCase().includes(String(p.query||'').toLowerCase()))};
+    if(action==='inspectSource')return {sheets:['TONG_HOP'],headers:[{column:'A',label:'CCCD'},{column:'B',label:'Tên Khóa học'},{column:'C',label:'Họ và tên'},{column:'D',label:'Ngày sinh'},{column:'F',label:'GIÁO VIÊN TUYỂN SINH'},{column:'G',label:'RÚT HỒ SƠ'},{column:'J',label:'SỐ QĐ'},{column:'K',label:'NỘI DUNG THI SH'},{column:'L',label:'HẠNG NGUỒN'}]};
+    if(action==='lookupStudent'||action==='updateStudent'){const target=p.cccd||p.studentRef;if(!/^00000000000[123]$/.test(target))throw new Error('Không tìm thấy học viên.');if(action==='updateStudent')Object.assign(mock.fields,p.changes);const s=mockStudent(target);return {student:s,rowVersion:'demo-v1',fields:[{column:'B',label:'Lớp / khóa học',value:s.className},{column:'C',label:'Họ và tên',value:s.name},{column:'L',label:'Hạng đào tạo',value:s.license},...Object.entries(mock.fields).map(([column,value])=>({column,label:column==='G'?'Tình trạng hồ sơ':column==='J'?'Số quyết định tốt nghiệp':'Kết quả sát hạch',value,editable:mock.config.source.editableColumns.includes(column)}))]}}
+    if(action==='saveAccount'){const old=mock.accounts.find(a=>a.username===p.username);if(old)Object.assign(old,{role:p.role,enabled:p.enabled});else mock.accounts.push({username:p.username,role:p.role,enabled:p.enabled});return {accounts:mock.accounts.map(a=>Object.assign({},a))}}
+    throw new Error('Chức năng chưa có trong dữ liệu minh họa.');
+  }
+
+  async function boot(){
+    if(demo)$('demo-banner').hidden=false;
+    const bootEl=$('boot-data');
+    if(!demo&&bootEl){
+      const raw=bootEl.innerHTML.trim();
+      if(raw.charAt(0)==='{'){
+        try{state.boot=JSON.parse(raw);applyBrand();render();return;}catch(e){}
+      }
+    }
+    try{state.boot=await api('bootstrap');applyBrand();render()}
+    catch(e){$('app').innerHTML='<div class="boot-error card"><h2>Chưa kết nối được cổng đăng ký</h2><div class="notice error">'+esc(e.message)+'</div><p class="muted small section-space">Vui lòng tải lại trang hoặc liên hệ trung tâm.</p></div>'}
+  }
+  boot();
+  </script>
 </body>
 </html>
